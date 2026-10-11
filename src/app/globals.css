@@ -1237,5 +1237,39 @@ input::placeholder {
   .catalog-sort { margin-left: auto; }
 }
 
-.header-inner nav .header-account-link { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.header-account-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid var(--navy);
+  border-radius: 10px;
+  background: var(--navy);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.header-account-link:hover { background: #1d3c54; }
+.header-account-link svg { flex-shrink: 0; }
 @media (max-width: 850px) { .header-inner { flex-wrap: wrap; padding-block: 16px 10px; } .header-inner nav { order: 3; width: 100%; margin: 0; flex-wrap: wrap; } .header-phone { margin-left: auto; } }
+
+@media (max-width: 700px) {
+  .header-actions { display: contents; }
+  .header-account-link { order: 1; margin-left: auto; min-height: 40px; padding: 9px 12px; }
+  .header-inner nav { order: 2; }
+  .header-phone { order: 3; width: 100%; margin: 0; justify-content: flex-end; padding-block: 2px 4px; }
+}
+@media (max-width: 420px) {
+  .brand img { width: 128px; height: 33px; }
+  .header-account-link { font-size: 11px; gap: 6px; padding-inline: 10px; }
+}

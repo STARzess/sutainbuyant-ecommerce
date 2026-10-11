@@ -38,7 +38,7 @@ export function AuthForm({ mode, returnTo }: { mode: AuthMode; returnTo: string 
       {registering && <FormField id={fieldId("password_confirmation")} name="password_confirmation" label="Нууц үг давтах" type="password" autoComplete="new-password" required maxLength={1024} errors={form.errors.password_confirmation} disabled={form.pending} />}
       <p className="form-message" role="alert">{form.message}</p>
       <button className="button primary auth-submit" type="submit" disabled={form.pending}>
-        {form.pending ? <><span className="form-spinner" aria-hidden="true" />{registering ? "Бүртгэж байна…" : "Нэвтэрч байна…"}</> : <>{registering ? "Бүртгүүлэх" : "Нэвтрэх"}<span aria-hidden="true">→</span></>}
+        {form.pending ? <><span className="form-spinner" aria-hidden="true" />{registering ? "Бүртгэж байна…" : "Нэвтэрч байна…"}</> : <>{registering ? "Бүртгүүлэх" : "Нэвтрэх"}<span aria-hidden="true"></span></>}
       </button>
       <span className="sr-only" role="status">{form.pending ? "Хүсэлтийг боловсруулж байна." : ""}</span>
       <p className="auth-switch">{registering ? "Бүртгэлтэй юу?" : "Бүртгэлгүй юу?"} <Link href={otherPage}>{registering ? "Нэвтрэх" : "Бүртгүүлэх"}</Link></p>

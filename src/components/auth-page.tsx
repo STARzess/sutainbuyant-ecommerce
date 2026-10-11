@@ -18,7 +18,6 @@ export function AuthFrame({ mode, children }: { mode: AuthMode; children: React.
           <Link href="/products" className="auth-browse">Бүтээгдэхүүн үзэх <span aria-hidden="true">↗</span></Link>
         </aside>
         <section className="auth-panel" aria-labelledby="auth-title">
-          <p className="auth-panel-eyebrow">ТАНЫ БҮРТГЭЛ</p>
           <h1 id="auth-title">{registering ? "Бүртгүүлэх" : "Тавтай морил"}</h1>
           <p className="auth-subtitle">{registering ? "Мэдээллээ оруулж, шинэ бүртгэл үүсгээрэй." : "Имэйл хаяг, нууц үгээрээ нэвтрээрэй."}</p>
           {children}
