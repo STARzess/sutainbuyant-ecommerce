@@ -2,13 +2,12 @@ import "server-only";
 import { cacheLife } from "next/cache";
 import type { CatalogQuery } from "@/lib/catalog";
 import { createShopApiClient } from "@/lib/shop-api-client";
+import { apiBaseUrl } from "@/lib/api-server";
 
 export const defaultShopQuery: CatalogQuery = { q: "", category: "", tag: "", min: undefined, max: undefined, sort: "newest", page: 1 };
 
 function client() {
-  const baseUrl = process.env.API_BASE_URL;
-  if (!baseUrl) throw new Error("API_BASE_URL is not configured");
-  return createShopApiClient(baseUrl);
+  return createShopApiClient(apiBaseUrl());
 }
 
 export async function getShopProducts(query: CatalogQuery = defaultShopQuery, perPage = 9) {

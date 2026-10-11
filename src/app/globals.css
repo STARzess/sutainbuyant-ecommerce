@@ -1236,3 +1236,6 @@ input::placeholder {
   .catalog-toolbar { flex-wrap: wrap; }
   .catalog-sort { margin-left: auto; }
 }
+
+.header-inner nav .header-account-link { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+@media (max-width: 850px) { .header-inner { flex-wrap: wrap; padding-block: 16px 10px; } .header-inner nav { order: 3; width: 100%; margin: 0; flex-wrap: wrap; } .header-phone { margin-left: auto; } }

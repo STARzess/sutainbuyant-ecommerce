@@ -1,3 +1,5 @@
+import { ApiError as ShopApiError, apiRecord as record, createApiClient } from "./api-client";
+export { ApiError as ShopApiError } from "./api-client";
 import type { CatalogProduct, CatalogQuery } from "./catalog";
 
 export type ShopOption = {
@@ -7,20 +9,6 @@ export type ShopOption = {
   image?: CatalogProduct["image"];
   count?: number;
 };
-
-export class ShopApiError extends Error {
-  readonly status: number;
-  constructor(status: number) {
-    super("Shop API request failed");
-    this.name = "ShopApiError";
-    this.status = status;
-  }
-}
-
-function record(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new ShopApiError(502);
-  return value as Record<string, unknown>;
-}
 
 function text(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -106,29 +94,9 @@ export function shopProductQuery(query: CatalogQuery, perPage = 9) {
 }
 
 export function createShopApiClient(baseUrl: string, fetcher: typeof fetch = fetch, timeoutMs = 10000) {
-  const base = new URL(baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`);
-  if (!/^https?:$/.test(base.protocol) || base.username || base.password || base.search || base.hash) throw new ShopApiError(500);
-
-  async function request(route: string, allowMissing = false) {
-    let response: Response;
-    try {
-      response = await fetcher(new URL(`shop/${route}`, base), {
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-        redirect: "error",
-        signal: AbortSignal.timeout(timeoutMs),
-      });
-    } catch {
-      throw new ShopApiError(503);
-    }
-    if (allowMissing && response.status === 404) return null;
-    if (!response.ok) throw new ShopApiError(response.status);
-    try {
-      return record(await response.json());
-    } catch {
-      throw new ShopApiError(502);
-    }
-  }
+  const api = createApiClient(baseUrl, fetcher, timeoutMs);
+  const base = new URL(api.baseUrl);
+  const request = (route: string, allowMissing = false) => api.request(`shop/${route}`, { allowMissing });
 
   function dataArray(body: Record<string, unknown> | null) {
     if (!body || !Array.isArray(body.data)) throw new ShopApiError(502);

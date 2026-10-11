@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteNavigation, NavigationLinks } from "@/components/site-navigation";
 import { Suspense } from "react";
+import { AccountLink, AccountLinkFallback } from "@/components/account-link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -43,7 +44,9 @@ export default function RootLayout({
                 priority
               />
             </Link>
-            <Suspense fallback={<NavigationLinks />}><SiteNavigation /></Suspense>
+            <Suspense fallback={<NavigationLinks accountLink={<AccountLinkFallback />} />}>
+              <SiteNavigation accountLink={<Suspense fallback={<AccountLinkFallback />}><AccountLink /></Suspense>} />
+            </Suspense>
             <a className="header-phone" href="tel:+97677669999">
               <svg
                 width="18"
