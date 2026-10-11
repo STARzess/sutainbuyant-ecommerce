@@ -243,7 +243,7 @@ async function Catalog({
         {result.products.length ? (
           <div className="product-grid catalog-grid">
             {result.products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} returnTo={catalogHref(query)} />
             ))}
           </div>
         ) : (

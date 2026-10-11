@@ -86,6 +86,7 @@ export default function HomePage() {
         <div className="product-grid">
           {homeProducts.map((product) => (
             <article className="product-card" key={product.id}>
+              <Link className="product-card-link" href={`/products/${product.id}`}>
               <div className="product-image">
                 <PartsArt kind={product.kind} name={product.name} />
               </div>
@@ -95,6 +96,7 @@ export default function HomePage() {
                 <p className="product-label">{product.label}</p>
                 <p className="product-price">{formatPrice(product.price)}</p>
               </div>
+              </Link>
             </article>
           ))}
         </div>

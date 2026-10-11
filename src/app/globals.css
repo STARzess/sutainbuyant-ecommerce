@@ -1190,3 +1190,7 @@ input::placeholder {
     animation: none !important;
   }
 }
+
+.product-card-link { display: block; height: 100%; }
+.product-card:has(.product-card-link) { transition: border-color 0.2s, box-shadow 0.2s; }
+.product-card:has(.product-card-link):hover { border-color: #cbd4dd; box-shadow: 0 5px 20px #102a400b; }

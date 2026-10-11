@@ -12,7 +12,7 @@ export function SiteNavigation() {
       </Link>
       <Link
         href="/products"
-        aria-current={pathname === "/products" ? "page" : undefined}
+        aria-current={pathname === "/products" || pathname.startsWith("/products/") ? "page" : undefined}
       >
         Бүтээгдэхүүн
       </Link>

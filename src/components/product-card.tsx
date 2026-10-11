@@ -1,10 +1,12 @@
+import Link from "next/link";
 import { PartsArt } from "./parts-art";
 import { formatPrice } from "@/lib/home-products";
 import type { CatalogProduct } from "@/lib/catalog";
 
-export function ProductCard({ product }: { product: CatalogProduct }) {
+export function ProductCard({ product, returnTo }: { product: CatalogProduct; returnTo?: string }) {
   return (
     <article className="product-card">
+      <Link className="product-card-link" href={`/products/${product.id}${returnTo ? `?from=${encodeURIComponent(returnTo)}` : ""}`}>
       <div className="product-image">
         <PartsArt
           kind={product.kind}
@@ -26,6 +28,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
         <p className="product-price">{formatPrice(product.price)}</p>
         <p className="product-sku">Код: {product.sku}</p>
       </div>
+      </Link>
     </article>
   );
 }
