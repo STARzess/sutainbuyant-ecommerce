@@ -405,3 +405,7 @@
     transition: none;
   }
 }
+
+.detail-image-button > .product-photo { height: 100%; }
+.image-dialog-art > .product-photo { height: 100%; }
+.detail-description p { white-space: pre-line; }

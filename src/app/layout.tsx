@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SiteNavigation } from "@/components/site-navigation";
+import { SiteNavigation, NavigationLinks } from "@/components/site-navigation";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Сутайн Буянт | Автомашины сэлбэг",
+  title: "Сутайн Буянт | Онлайн дэлгүүр",
   description:
-    "Автомашины хөдөлгүүр, тоормос, явах эд анги, тос тосолгоо, дугуй болон дагалдах хэрэгсэл. Сутайн Буянт авто сэлбэгийн дэлгүүр.",
+    "Сутайн Буянт онлайн дэлгүүр. Өдөр тутмын хэрэгцээт бараа, бүтээгдэхүүнийг ангилал, үнээр сонгоорой.",
   openGraph: {
-    title: "Сутайн Буянт | Автомашины сэлбэг",
+    title: "Сутайн Буянт | Онлайн дэлгүүр",
     locale: "mn_MN",
     siteName: "Сутайн Буянт",
   },
@@ -42,7 +43,7 @@ export default function RootLayout({
                 priority
               />
             </Link>
-            <SiteNavigation />
+            <Suspense fallback={<NavigationLinks />}><SiteNavigation /></Suspense>
             <a className="header-phone" href="tel:+97677669999">
               <svg
                 width="18"
@@ -71,7 +72,7 @@ export default function RootLayout({
               >
                 Сутайн Буянт
               </a>
-              <p>Автомашины сэлбэг, дагалдах хэрэгсэл.</p>
+              <p>Бараа, бүтээгдэхүүний онлайн дэлгүүр.</p>
             </div>
             <div className="footer-contact">
               <a href="mailto:info@sutainbuyant.com">info@sutainbuyant.com</a>

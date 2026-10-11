@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CartView } from "@/components/cart-view";
-import { catalogProducts } from "@/lib/catalog-products";
 import "./cart.css";
 
 export const metadata: Metadata = {
   title: "Миний сагс | Сутайн Буянт",
-  description: "Сонгосон автомашины сэлбэгийн тоо ширхэг, үнийн дүнг харах.",
+  description: "Сонгосон бүтээгдэхүүний тоо ширхэг, үнийн дүнг харах.",
   robots: { index: false, follow: false },
 };
 
@@ -20,14 +19,14 @@ export default function CartPage() {
       </nav>
       <header className="cart-heading">
         <div>
-          <p className="cart-eyebrow">СОНГОСОН СЭЛБЭГҮҮД</p>
+          <p className="cart-eyebrow">СОНГОСОН БҮТЭЭГДЭХҮҮНҮҮД</p>
           <h1>Миний сагс</h1>
         </div>
         <Link className="cart-continue" href="/products">
           <span aria-hidden="true">←</span> Үргэлжлүүлэн сонгох
         </Link>
       </header>
-      <CartView products={catalogProducts} />
+      <CartView />
     </div>
   );
 }

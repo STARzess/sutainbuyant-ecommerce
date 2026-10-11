@@ -6,7 +6,11 @@ export type CatalogProduct = {
   category: string;
   label: string;
   price: number;
-  kind: PartKind;
+  kind?: PartKind;
+  description?: string;
+  image?: { url: string; thumbnail?: string; preview?: string };
+  categoryId?: string;
+  tagNames?: { id: string; name: string }[];
   sku: string;
   tags: string[];
   addedAt: string;
@@ -63,7 +67,7 @@ function price(value: string) {
     : undefined;
 }
 
-export function parseCatalogQuery(params: SearchParams): CatalogQuery {
+export function parseCatalogQuery(params: SearchParams, options?: { categories: { id: string }[]; tags: { id: string }[] }): CatalogQuery {
   const category = first(params.category);
   const tag = first(params.tag);
   const sort = first(params.sort);
@@ -71,10 +75,10 @@ export function parseCatalogQuery(params: SearchParams): CatalogQuery {
 
   return {
     q: first(params.q).trim().slice(0, 120),
-    category: catalogCategories.some((item) => item.id === category)
+    category: (options ? options.categories.some((item) => item.id === category) : catalogCategories.some((item) => item.id === category) || /^[1-9]\d{0,14}$/.test(category))
       ? category
       : "",
-    tag: catalogTags.some((item) => item.id === tag) ? tag : "",
+    tag: (options ? options.tags.some((item) => item.id === tag) : catalogTags.some((item) => item.id === tag) || /^[1-9]\d{0,14}$/.test(tag)) ? tag : "",
     min: price(first(params.min)),
     max: price(first(params.max)),
     sort: catalogSorts.some((item) => item.id === sort)
@@ -164,4 +168,16 @@ export function getCatalogPage(
     end: Math.min(start + PAGE_SIZE, total),
     invalidPriceRange,
   };
+}
+
+
+export function paginationPages(page: number, pages: number): (number | "ellipsis")[] {
+  const visible = [...new Set([1, pages, page - 1, page, page + 1].filter((value) => value >= 1 && value <= pages))].sort((a, b) => a - b);
+  const result: (number | "ellipsis")[] = [];
+  for (const value of visible) {
+    const previous = result.at(-1);
+    if (typeof previous === "number" && value > previous + 1) result.push("ellipsis");
+    result.push(value);
+  }
+  return result;
 }

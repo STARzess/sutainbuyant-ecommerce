@@ -4,8 +4,7 @@ import Link from "next/link";
 import { CartLink } from "@/components/cart-link";
 import { usePathname } from "next/navigation";
 
-export function SiteNavigation() {
-  const pathname = usePathname();
+export function NavigationLinks({ pathname = "" }: { pathname?: string }) {
   return (
     <nav aria-label="Үндсэн цэс">
       <Link href="/" aria-current={pathname === "/" ? "page" : undefined}>
@@ -18,7 +17,12 @@ export function SiteNavigation() {
         Бүтээгдэхүүн
       </Link>
       <Link href="/#categories">Ангилал</Link>
-      <CartLink />
+      <CartLink active={pathname === "/cart"} />
     </nav>
   );
+}
+
+export function SiteNavigation() {
+  const pathname = usePathname();
+  return <NavigationLinks pathname={pathname} />;
 }

@@ -1202,3 +1202,37 @@ input::placeholder {
   .header-inner nav { flex-wrap: wrap; gap: 12px 20px; }
   .header-cart-link { margin-left: auto; }
 }
+
+
+.product-photo { display: block; position: relative; width: 100%; height: 100%; min-height: 1px; }
+.product-photo img { object-fit: contain; }
+.product-photo-empty { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #95a3b1; }
+.product-image .product-photo { height: 100%; }
+.category-photo { width: 58px; height: 62px; flex-shrink: 0; }
+.shop-category-card { align-items: center; }
+.shop-category-card > div:last-child { min-width: 0; }
+.shop-category-card p { overflow-wrap: anywhere; }
+.shop-home-loading { padding-block: 30px; min-height: 550px; }
+.shop-home-loading .skeleton-card { margin-bottom: 25px; height: 380px; }
+.shop-error { padding-block: 75px; min-height: 450px; }
+.shop-error h1 { font-size: 27px; }
+.shop-error p { margin-block: 12px 24px; color: var(--muted); }
+.hero-feature { position: absolute; z-index: 2; width: 215px; background: white; color: var(--ink); border-radius: 16px; padding: 12px; box-shadow: 0 25px 60px #00000025; }
+.hero-feature-1 { top: 58px; left: 15%; transform: rotate(-7deg); }
+.hero-feature-2 { top: 142px; right: 8%; transform: rotate(7deg); }
+.hero-feature-image { height: 145px; border-radius: 10px; overflow: hidden; background: var(--paper); }
+.hero-feature p { font-size: 11px; font-weight: 600; margin-top: 12px; overflow-wrap: anywhere; }
+.hero-feature strong { display: block; font-size: 15px; color: var(--red); margin-top: 4px; }
+@media (max-width: 1000px) { .hero-feature { width: 175px; } .hero-feature-1 { left: 6%; } .hero-feature-2 { right: 5%; } .hero-feature-image { height: 130px; } }
+@media (max-width: 700px) {
+  .shop-hero-art { height: 320px; }
+  .hero-feature { width: 170px; }
+  .hero-feature-1 { top: 25px; left: 10%; }
+  .hero-feature-2 { top: 88px; right: 9%; }
+  .hero-feature-image { height: 120px; }
+  .category-photo { width: 53px; height: 49px; margin-bottom: 10px; }
+  .pagination { gap: 2px; }
+  .pagination a, .pagination > span { min-width: 30px; height: 37px; }
+  .catalog-toolbar { flex-wrap: wrap; }
+  .catalog-sort { margin-left: auto; }
+}

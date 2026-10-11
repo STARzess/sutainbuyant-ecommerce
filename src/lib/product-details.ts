@@ -16,7 +16,7 @@ const descriptions: Record<PartKind, string> = {
 };
 
 export function getProductDescription(product: CatalogProduct) {
-  return descriptions[product.kind];
+  return product.description ?? (product.kind ? descriptions[product.kind] : "");
 }
 
 export function getRelatedProducts(

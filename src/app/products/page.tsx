@@ -4,14 +4,13 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CatalogForm } from "@/components/catalog-form";
 import { ProductCard } from "@/components/product-card";
-import { catalogProducts } from "@/lib/catalog-products";
+import { getShopOptions, getShopProducts } from "@/lib/shop-api";
+import type { ShopOption } from "@/lib/shop-api-client";
 import {
-  catalogCategories,
-  catalogTags,
   catalogSorts,
   catalogHref,
   parseCatalogQuery,
-  getCatalogPage,
+  paginationPages,
   type CatalogQuery,
   type SearchParams,
 } from "@/lib/catalog";
@@ -20,20 +19,20 @@ import { formatPrice } from "@/lib/home-products";
 export const metadata: Metadata = {
   title: "Бүтээгдэхүүн | Сутайн Буянт",
   description:
-    "Автомашины сэлбэгийг нэр, код, ангилал, таг болон үнээр хайж олоорой.",
+    "Бүтээгдэхүүнийг нэр, ангилал, таг болон үнээр хайж олоорой.",
 };
 
-function ActiveFilters({ query }: { query: CatalogQuery }) {
+function ActiveFilters({ query, categories, tags }: { query: CatalogQuery; categories: ShopOption[]; tags: ShopOption[] }) {
   const filters: { label: string; changes: Partial<CatalogQuery> }[] = [];
   if (query.q) filters.push({ label: `Хайлт: ${query.q}`, changes: { q: "" } });
   if (query.category)
     filters.push({
-      label: catalogCategories.find((item) => item.id === query.category)!.name,
+      label: categories.find((item) => item.id === query.category)!.name,
       changes: { category: "" },
     });
   if (query.tag)
     filters.push({
-      label: catalogTags.find((item) => item.id === query.tag)!.name,
+      label: tags.find((item) => item.id === query.tag)!.name,
       changes: { tag: "" },
     });
   if (query.min !== undefined)
@@ -73,8 +72,10 @@ async function Catalog({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const query = parseCatalogQuery(await searchParams);
-  const result = getCatalogPage(catalogProducts, query);
+  const options = await getShopOptions();
+  const { categories, tags } = options;
+  const query = parseCatalogQuery(await searchParams, options);
+  const result = await getShopProducts(query);
   if (result.page !== query.page)
     redirect(catalogHref(query, { page: result.page }));
 
@@ -82,10 +83,11 @@ async function Catalog({
     <CatalogForm
       key={catalogHref(query)}
       initialFiltersOpen={result.invalidPriceRange}
+      options={options}
     >
       <div className="catalog-search">
         <label className="visually-hidden" htmlFor="catalog-search">
-          Сэлбэг хайх
+          Бүтээгдэхүүн хайх
         </label>
         <svg
           width="21"
@@ -105,7 +107,7 @@ async function Catalog({
           name="q"
           defaultValue={query.q}
           maxLength={120}
-          placeholder="Сэлбэгийн нэр, машины загвар, кодоор хайх"
+          placeholder="Бүтээгдэхүүний нэрээр хайх"
         />
         <button type="submit" className="button primary">
           Хайх
@@ -132,10 +134,10 @@ async function Catalog({
               value=""
               defaultChecked={!query.category}
             />
-            <span>Бүх сэлбэг</span>
-            <small>{catalogProducts.length}</small>
+            <span>Бүх бүтээгдэхүүн</span>
+            <small>{options.total}</small>
           </label>
-          {catalogCategories.map((category) => (
+          {categories.map((category) => (
             <label className="category-option" key={category.id}>
               <input
                 type="radio"
@@ -144,13 +146,7 @@ async function Catalog({
                 defaultChecked={query.category === category.id}
               />
               <span>{category.name}</span>
-              <small>
-                {
-                  catalogProducts.filter(
-                    (product) => product.category === category.name,
-                  ).length
-                }
-              </small>
+              <small>{category.count}</small>
             </label>
           ))}
         </fieldset>
@@ -160,7 +156,7 @@ async function Catalog({
           </label>
           <select id="catalog-tag" name="tag" defaultValue={query.tag}>
             <option value="">Бүх таг</option>
-            {catalogTags.map((tag) => (
+            {tags.map((tag) => (
               <option key={tag.id} value={tag.id}>
                 {tag.name}
               </option>
@@ -220,7 +216,7 @@ async function Catalog({
         <div className="catalog-toolbar">
           <div>
             <h2 id="results-title">
-              Сэлбэгүүд <span>{result.total}</span>
+              Бүтээгдэхүүнүүд <span>{result.total}</span>
             </h2>
             <p>
               {result.total
@@ -239,7 +235,7 @@ async function Catalog({
             </select>
           </div>
         </div>
-        <ActiveFilters query={query} />
+        <ActiveFilters query={query} categories={categories} tags={tags} />
         {result.products.length ? (
           <div className="product-grid catalog-grid">
             {result.products.map((product) => (
@@ -260,14 +256,14 @@ async function Catalog({
               <circle cx="10.5" cy="10.5" r="6.5" />
               <path d="m16 16 5 5M8 10.5h5" />
             </svg>
-            <h3>Тохирох сэлбэг олдсонгүй</h3>
+            <h3>Тохирох бүтээгдэхүүн олдсонгүй</h3>
             <p>
               {result.invalidPriceRange
                 ? "Үнийн хязгаараа зөв оруулаад дахин хайна уу."
                 : "Хайлтын үг эсвэл шүүлтүүрээ өөрчилж дахин хайна уу."}
             </p>
             <Link className="button primary" href="/products">
-              Бүх сэлбэгийг харах
+              Бүх бүтээгдэхүүнийг харах
             </Link>
           </div>
         )}
@@ -286,8 +282,8 @@ async function Catalog({
                 ←
               </span>
             )}
-            {Array.from({ length: result.pages }, (_, index) => index + 1).map(
-              (page) => (
+            {paginationPages(result.page, result.pages).map(
+              (page, index) => page === "ellipsis" ? <span key={`ellipsis-${index}`} aria-hidden="true">…</span> : (
                 <Link
                   key={page}
                   href={catalogHref(query, { page })}
@@ -351,9 +347,9 @@ export default function ProductsPage({
         <span aria-current="page">Бүтээгдэхүүн</span>
       </nav>
       <div className="catalog-heading">
-        <p className="eyebrow">СУТАЙН БУЯНТ / АВТО СЭЛБЭГ</p>
+        <p className="eyebrow">СУТАЙН БУЯНТ / ОНЛАЙН ДЭЛГҮҮР</p>
         <h1>Бүтээгдэхүүн</h1>
-        <p>Таны автомашинд тохирох сэлбэгийг олоорой.</p>
+        <p>Өөрт хэрэгтэй бүтээгдэхүүнээ олоорой.</p>
       </div>
       <Suspense fallback={<CatalogSkeleton />}>
         <Catalog searchParams={searchParams} />

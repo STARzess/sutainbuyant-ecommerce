@@ -7,9 +7,11 @@ import { catalogHref, parseCatalogQuery } from "@/lib/catalog";
 export function CatalogForm({
   children,
   initialFiltersOpen = false,
+  options,
 }: {
   children: React.ReactNode;
   initialFiltersOpen?: boolean;
+  options: { categories: { id: string }[]; tags: { id: string }[] };
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -26,7 +28,7 @@ export function CatalogForm({
         const values = Object.fromEntries(
           new FormData(event.currentTarget),
         ) as Record<string, string>;
-        const query = parseCatalogQuery(values);
+        const query = parseCatalogQuery(values, options);
         startTransition(() =>
           router.push(catalogHref(query), { scroll: false }),
         );

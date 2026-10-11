@@ -73,7 +73,7 @@ export function AddToCart({
           setNotice(
             after > before
               ? `${after - before} ширхэг сагсанд нэмэгдлээ.`
-              : `Нэг сэлбэгээс хамгийн ихдээ ${MAX_CART_QUANTITY} ширхэг нэмэх боломжтой.`,
+              : `Нэг бүтээгдэхүүнээс хамгийн ихдээ ${MAX_CART_QUANTITY} ширхэг нэмэх боломжтой.`,
           );
         } catch {
           setNotice("Сагсанд хадгалж чадсангүй. Дахин оролдоно уу.");
