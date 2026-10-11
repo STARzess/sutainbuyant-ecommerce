@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CartLink } from "@/components/cart-link";
 import { usePathname } from "next/navigation";
 
 export function SiteNavigation() {
@@ -17,6 +18,7 @@ export function SiteNavigation() {
         Бүтээгдэхүүн
       </Link>
       <Link href="/#categories">Ангилал</Link>
+      <CartLink />
     </nav>
   );
 }

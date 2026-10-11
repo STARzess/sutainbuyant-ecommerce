@@ -58,3 +58,27 @@ export function addCartItem(
   else next.push({ id, quantity });
   return next;
 }
+
+
+export function changeCartQuantity(items: CartItem[], id: string, quantity: number): CartItem[] {
+  if (!validId(id) || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > MAX_CART_QUANTITY) {
+    throw new RangeError("Invalid cart item or quantity");
+  }
+  return parseCart(JSON.stringify(items)).map((item) => item.id === id ? { ...item, quantity } : item);
+}
+
+export function removeCartItem(items: CartItem[], id: string): CartItem[] {
+  return parseCart(JSON.stringify(items)).filter((item) => item.id !== id);
+}
+
+export function getCartSummary(items: CartItem[], products: { id: string; price: number }[]) {
+  const prices = new Map(products.map((product) => [product.id, product.price]));
+  return items.reduce((summary, item) => {
+    const price = prices.get(item.id);
+    summary.productCount += 1;
+    summary.quantity += item.quantity;
+    if (price === undefined) summary.unavailableCount += 1;
+    else summary.subtotal += price * item.quantity;
+    return summary;
+  }, { productCount: 0, quantity: 0, subtotal: 0, unavailableCount: 0 });
+}

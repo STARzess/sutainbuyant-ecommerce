@@ -1194,3 +1194,11 @@ input::placeholder {
 .product-card-link { display: block; height: 100%; }
 .product-card:has(.product-card-link) { transition: border-color 0.2s, box-shadow 0.2s; }
 .product-card:has(.product-card-link):hover { border-color: #cbd4dd; box-shadow: 0 5px 20px #102a400b; }
+
+
+.header-inner nav .header-cart-link { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.header-cart-count { display: grid; place-items: center; min-width: 20px; height: 20px; padding-inline: 5px; border-radius: 6px; background: var(--navy); color: white; font-size: 10px; font-weight: 650; }
+@media (max-width: 700px) {
+  .header-inner nav { flex-wrap: wrap; gap: 12px 20px; }
+  .header-cart-link { margin-left: auto; }
+}
