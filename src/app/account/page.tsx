@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { requireUser } from "@/lib/auth";
+import { ProfileForm, PasswordForm } from "@/components/profile-forms";
 import { LogoutButton } from "@/components/logout-button";
 import "../auth.css";
 import "../orders/orders.css";
+import "./profile.css";
 
 export const metadata: Metadata = { title: "Миний бүртгэл | Сутайн Буянт", robots: { index: false, follow: false } };
 
 async function AccountContent() {
   const user = await requireUser("/account");
-  return <section className="account-card" aria-labelledby="account-title">
+  return <div className="profile-layout"><section className="account-card" aria-labelledby="account-title">
     <div className="account-avatar" aria-hidden="true">{user.name.slice(0, 1).toUpperCase()}</div>
     <p className="auth-panel-eyebrow">ТАНЫ БҮРТГЭЛ</p>
     <h1 id="account-title">Миний бүртгэл</h1>
@@ -19,7 +21,7 @@ async function AccountContent() {
     <Link className="button account-orders-link" href="/orders">Миний захиалгууд</Link>
     <Link className="button primary account-browse" href="/products">Бүтээгдэхүүн үзэх </Link>
     <LogoutButton />
-  </section>;
+  </section><div className="profile-panels"><ProfileForm key={user.id} user={user} /><PasswordForm key={user.id} /></div></div>;
 }
 
 export default function AccountPage() {

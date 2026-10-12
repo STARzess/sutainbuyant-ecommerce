@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FieldErrors } from "./api-client";
 
-type ApiFormOptions = { onError?: (status: number) => void; networkErrorMessage?: string };
+type ApiFormOptions = { method?: "POST" | "PUT"; onError?: (status: number) => void; networkErrorMessage?: string };
 
 export function useApiForm<T>(endpoint: string, options: ApiFormOptions = {}) {
   const [pending, setPending] = useState(false);
@@ -34,7 +34,7 @@ export function useApiForm<T>(endpoint: string, options: ApiFormOptions = {}) {
     setPending(true); setErrors({}); setMessage("");
     try {
       const response = await fetch(endpoint, {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: options.method ?? "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values), credentials: "same-origin", cache: "no-store",
         signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]),
       });

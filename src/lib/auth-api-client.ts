@@ -1,4 +1,5 @@
 import { ApiError, apiRecord, createApiClient } from "./api-client";
+import type { ProfileValues, PasswordValues } from "./profile-validation";
 import type { AuthMode, AuthValues, SessionUser } from "./auth-validation";
 
 export function mapSessionUser(value: unknown): SessionUser {
@@ -19,6 +20,14 @@ export function createAuthApiClient(baseUrl: string, fetcher: typeof fetch = fet
     async getUser(token: string) {
       const body = await api.request("shop/profile", { token });
       return mapSessionUser(body?.data);
+    },
+    async updateProfile(token: string, values: ProfileValues) {
+      const body = await api.request("shop/profile", { method: "PUT", token, data: { name: values.name, email: values.email } });
+      return mapSessionUser(body?.data);
+    },
+    async changePassword(token: string, values: PasswordValues) {
+      const body = await api.request("shop/profile/password", { method: "PUT", token, data: { current_password: values.current_password, password: values.password, password_confirmation: values.password_confirmation } });
+      if (typeof body?.message !== "string") throw new ApiError(502);
     },
     async logout(token: string) {
       try { await api.request("logout", { method: "POST", token }); }

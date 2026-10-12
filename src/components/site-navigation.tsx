@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { CartLink } from "@/components/cart-link";
 import { usePathname } from "next/navigation";
 
 export function NavigationLinks({ pathname = "" }: { pathname?: string }) {
@@ -17,7 +16,6 @@ export function NavigationLinks({ pathname = "" }: { pathname?: string }) {
         Бүтээгдэхүүн
       </Link>
       <Link href="/#categories">Ангилал</Link>
-      <CartLink active={pathname === "/cart"} />
     </nav>
   );
 }

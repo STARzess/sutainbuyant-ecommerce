@@ -1,0 +1,12 @@
+.profile-layout { display: grid; grid-template-columns: minmax(260px, .8fr) minmax(0, 1.4fr); gap: 24px; max-width: 1080px; margin-inline: auto; align-items: start; }
+.profile-layout .account-card { max-width: none; width: 100%; margin: 0; }
+.profile-panels { display: grid; gap: 24px; min-width: 0; }
+.profile-card { background: white; border: 1px solid var(--line); border-radius: 20px; padding: 32px; min-width: 0; }
+.profile-card h2 { font-size: 22px; font-weight: 750; letter-spacing: -.4px; }
+.profile-description { color: var(--muted); font-size: 12px; line-height: 1.8; margin-top: 9px; }
+.profile-form { margin-top: 25px; }
+.profile-submit { margin-top: 24px; border: 0; font: inherit; font-size: 12px; font-weight: 650; cursor: pointer; }
+.profile-success { color: #246545; font-size: 12px; line-height: 1.8; margin-top: 16px; }
+.profile-success:empty { display: none; }
+@media (max-width: 850px) { .profile-layout { grid-template-columns: 1fr; max-width: 650px; } }
+@media (max-width: 600px) { .profile-layout, .profile-panels { gap: 18px; } .profile-card { padding: 25px 22px; border-radius: 16px; } .profile-card h2 { font-size: 20px; } .profile-submit { width: 100%; } }
