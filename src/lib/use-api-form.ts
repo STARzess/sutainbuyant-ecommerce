@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { FieldErrors } from "./api-client";
 
-export function useApiForm<T>(endpoint: string) {
+type ApiFormOptions = { onError?: (status: number) => void; networkErrorMessage?: string };
+
+export function useApiForm<T>(endpoint: string, options: ApiFormOptions = {}) {
   const [pending, setPending] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState("");
@@ -41,11 +43,12 @@ export function useApiForm<T>(endpoint: string) {
       if (!response.ok) {
         setErrors(body.errors && typeof body.errors === "object" ? body.errors : {});
         setMessage(typeof body.message === "string" ? body.message : "Хүсэлт амжилтгүй боллоо. Дахин оролдоно уу.");
+        options.onError?.(response.status);
         return null;
       }
       return body as T;
     } catch {
-      if (!controller.signal.aborted) setMessage("Холболт амжилтгүй боллоо. Дахин оролдоно уу.");
+      if (!controller.signal.aborted) setMessage(options.networkErrorMessage ?? "Холболт амжилтгүй боллоо. Дахин оролдоно уу.");
       return null;
     } finally {
       if (!controller.signal.aborted) setPending(false);

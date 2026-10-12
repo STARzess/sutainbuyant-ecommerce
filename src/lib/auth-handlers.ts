@@ -1,13 +1,10 @@
 import "server-only";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { privateJson } from "./api-response";
 import { ApiError } from "./api-client";
 import { authApiClient } from "./auth";
 import { SESSION_COOKIE, authFieldErrors, validateAuthValues, type AuthMode } from "./auth-validation";
 import { readJsonBody, sessionCookieOptions, verifyMutationOrigin } from "./request-security";
-
-export function privateJson(body: unknown, status = 200) {
-  return NextResponse.json(body, { status, headers: { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" } });
-}
 
 function authError(error: unknown, mode?: AuthMode) {
   const status = error instanceof ApiError ? error.status : 500;

@@ -23,7 +23,7 @@ export default function CartPage() {
           <h1>Миний сагс</h1>
         </div>
         <Link className="cart-continue" href="/products">
-          <span aria-hidden="true">←</span> Үргэлжлүүлэн сонгох
+           Үргэлжлүүлэн сонгох
         </Link>
       </header>
       <CartView />

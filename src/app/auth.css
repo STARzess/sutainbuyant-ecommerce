@@ -15,25 +15,7 @@
 .auth-panel h1, .account-card h1 { font-size: 30px; font-weight: 750; line-height: 1.4; letter-spacing: -.8px; margin-top: 6px; }
 .auth-subtitle { color: var(--muted); font-size: 12px; margin-top: 10px; }
 .auth-form { margin-top: 28px; }
-.form-field + .form-field { margin-top: 19px; }
-.form-field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 7px; }
-.form-input-wrap { position: relative; }
-.form-field input { display: block; width: 100%; min-width: 0; height: 46px; border: 1px solid #d8dfe6; border-radius: 9px; padding: 11px 13px; font: inherit; font-size: 13px; color: var(--ink); background: white; transition: border-color .15s; }
-.form-field input::placeholder { color: #8a95a0; }
-.form-field input:focus { border-color: var(--navy); outline: 2px solid #102a4020; outline-offset: 2px; }
-.form-field input[aria-invalid="true"] { border-color: var(--red); }
-.form-field input:disabled { background: var(--paper); }
-.has-toggle input { padding-right: 65px; }
-.password-toggle { position: absolute; inset: 3px 4px 3px auto; background: transparent; border: 0; padding-inline: 10px; color: var(--muted); font: inherit; font-size: 11px; cursor: pointer; border-radius: 6px; }
-.password-toggle:hover { color: var(--navy); background: var(--paper); }
-.form-hint { color: var(--muted); font-size: 10px; margin-top: 6px; }
-.form-field-error { color: var(--red); font-size: 11px; line-height: 1.7; margin-top: 6px; }
-.form-message { color: var(--red); font-size: 11px; line-height: 1.8; margin-top: 16px; overflow-wrap: anywhere; }
-.form-message:empty { display: none; }
 .auth-submit { width: 100%; justify-content: center; gap: 13px; margin-top: 24px; font: inherit; font-size: 12px; font-weight: 650; border: 0; cursor: pointer; }
-.button:disabled { opacity: .65; cursor: wait; }
-.form-spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid #ffffff55; border-top-color: white; border-radius: 50%; animation: form-spin .8s linear infinite; }
-@keyframes form-spin { to { transform: rotate(360deg); } }
 .auth-switch { text-align: center; font-size: 12px; color: var(--muted); padding-top: 25px; }
 .auth-switch a { color: var(--navy); font-weight: 650; margin-left: 5px; }
 .auth-switch a:hover { color: var(--red); }

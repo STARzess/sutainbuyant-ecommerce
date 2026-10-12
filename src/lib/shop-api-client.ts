@@ -36,7 +36,7 @@ function imageUrl(value: unknown, baseUrl: string) {
   }
 }
 
-function image(value: unknown, baseUrl: string): CatalogProduct["image"] {
+export function mapShopImage(value: unknown, baseUrl: string): CatalogProduct["image"] {
   if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
   const source = value as Record<string, unknown>;
   const url = imageUrl(source.url, baseUrl);
@@ -51,7 +51,7 @@ export function mapShopOption(value: unknown, baseUrl: string): ShopOption {
     id,
     name: text(option.name) || id,
     description: text(option.description),
-    image: image(option.image, baseUrl),
+    image: mapShopImage(option.image, baseUrl),
     count: option.products_count === undefined ? undefined : integer(option.products_count, 0),
   };
 }
@@ -67,7 +67,7 @@ export function mapShopProduct(value: unknown, baseUrl: string): CatalogProduct 
     name: text(product.name) || `Бүтээгдэхүүн ${id}`,
     price: product.price,
     description: text(product.description),
-    image: image(product.image, baseUrl),
+    image: mapShopImage(product.image, baseUrl),
     category: categories.map((item) => item.name).join(" · "),
     categoryId: categories[0]?.id,
     label: tags.map((item) => item.name).join(" · "),

@@ -146,7 +146,7 @@ export function CartView() {
           <div className="cart-empty-icon"><BagIcon /></div>
           <h2>Таны сагс хоосон байна</h2>
           <p>Хэрэгтэй бүтээгдэхүүнээ сонгоод сагсандаа нэмээрэй.</p>
-          <Link className="button primary" href="/products">Бүтээгдэхүүн үзэх <span aria-hidden="true">→</span></Link>
+          <Link className="button primary" href="/products">Бүтээгдэхүүн үзэх </Link>
         </section>
       ) : (
         <div className="cart-layout">
@@ -172,7 +172,9 @@ export function CartView() {
               <div className="cart-grand-total"><dt>Нийт дүн</dt><dd data-testid="cart-total">{formatPrice(summary.subtotal)}</dd></div>
             </dl>
             {summary.unavailableCount > 0 && <p className="cart-unavailable-note">Олдоогүй бүтээгдэхүүний үнэ нийт дүнд ороогүй.</p>}
-            <Link className="button primary" href="/products">Бүтээгдэхүүн нэмж сонгох <span aria-hidden="true">→</span></Link>
+            {summary.unavailableCount === 0 && items.length <= 50 ? <Link className="button primary" href="/checkout">Захиалга хийх </Link> : <button className="button primary" type="button" disabled>Захиалга хийх </button>}
+            {items.length > 50 && <p className="cart-unavailable-note">Нэг захиалгад 50 хүртэл төрлийн бүтээгдэхүүн сонгоно уу.</p>}
+            <Link className="button cart-continue-shopping" href="/products">Бүтээгдэхүүн нэмж сонгох </Link>
           </aside>
         </div>
       )}

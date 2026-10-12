@@ -15,8 +15,8 @@ async function HomeContent() {
           <h1 id="hero-title">Өдөр тутмын<br />хэрэгцээт <em>бүтээгдэхүүн.</em></h1>
           <p className="hero-description">Өөрт хэрэгтэй бараагаа нэг дороос сонгоорой.</p>
           <div className="hero-actions">
-            <Link className="button primary" href="/products">Бүтээгдэхүүн үзэх <span aria-hidden="true">↗</span></Link>
-            <a className="hero-secondary" href="#categories">Ангилал харах <span aria-hidden="true">→</span></a>
+            <Link className="button primary" href="/products">Бүтээгдэхүүн үзэх </Link>
+            <a className="hero-secondary" href="#categories">Ангилал харах </a>
           </div>
         </div>
         <div className="hero-art shop-hero-art">
@@ -50,7 +50,7 @@ async function HomeContent() {
       <section id="new-arrivals" className="products-section" aria-labelledby="products-title">
         <div className="section-heading">
           <div><p className="eyebrow">Бүтээгдэхүүн</p><h2 id="products-title">Шинээр нэмэгдсэн бүтээгдэхүүн</h2></div>
-          <Link className="section-link" href="/products?sort=newest">Бүгдийг харах <span aria-hidden="true">→</span></Link>
+          <Link className="section-link" href="/products?sort=newest">Бүгдийг харах </Link>
         </div>
         <div className="product-grid">{arrivals.products.map((product) => <ProductCard key={product.id} product={product} />)}</div>
       </section>

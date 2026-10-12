@@ -5,6 +5,7 @@ import { SiteNavigation, NavigationLinks } from "@/components/site-navigation";
 import { Suspense } from "react";
 import { AccountLink, AccountLinkFallback } from "@/components/account-link";
 import "./globals.css";
+import "./forms.css";
 
 export const metadata: Metadata = {
   title: "Сутайн Буянт | Онлайн дэлгүүр",

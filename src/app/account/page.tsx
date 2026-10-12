@@ -15,7 +15,7 @@ async function AccountContent() {
     <h1 id="account-title">Миний бүртгэл</h1>
     <p className="account-welcome">Сайн байна уу, {user.name}.</p>
     <dl className="account-details"><div><dt>Нэр</dt><dd>{user.name}</dd></div><div><dt>Имэйл хаяг</dt><dd>{user.email || "Бүртгэгдээгүй"}</dd></div></dl>
-    <Link className="button primary account-browse" href="/products">Бүтээгдэхүүн үзэх <span aria-hidden="true">→</span></Link>
+    <Link className="button primary account-browse" href="/products">Бүтээгдэхүүн үзэх </Link>
     <LogoutButton />
   </section>;
 }

@@ -109,3 +109,8 @@
   .cart-empty p { font-size: 11px; }
   .cart-unavailable { padding: 18px; }
 }
+
+.cart-summary .cart-continue-shopping { margin-top: 12px; border: 1px solid var(--line); color: var(--navy); }
+.cart-summary .cart-continue-shopping:hover { background: var(--paper); }
+.cart-summary button.button { border: 0; font: inherit; font-size: 11px; }
+.cart-summary .cart-unavailable-note { margin-block: 15px; }

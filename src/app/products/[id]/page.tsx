@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 async function ReturnLink({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const href = getCatalogReturnHref((await searchParams).from);
-  return <Link href={href} className="detail-return"><span aria-hidden="true">←</span>Жагсаалт руу буцах</Link>;
+  return <Link href={href} className="detail-return">Жагсаалт руу буцах</Link>;
 }
 
 async function RelatedProducts({ related, searchParams }: { related: CatalogProduct[]; searchParams: Promise<SearchParams> }) {
@@ -43,7 +43,7 @@ async function RelatedProducts({ related, searchParams }: { related: CatalogProd
     <section className="detail-related" aria-labelledby="related-title">
       <div className="section-heading">
         <h2 id="related-title">Холбоотой бүтээгдэхүүнүүд</h2>
-        <Link className="section-link" href="/products">Бүгдийг харах <span aria-hidden="true">→</span></Link>
+        <Link className="section-link" href="/products">Бүгдийг харах </Link>
       </div>
       <div className="product-grid">{related.map((item) => <ProductCard key={item.id} product={item} returnTo={returnTo} />)}</div>
     </section>
@@ -67,11 +67,11 @@ async function ProductContent({ params, searchParams }: Props) {
       <nav className="breadcrumb detail-breadcrumb" aria-label="Хуудасны зам">
         <Link href="/">Нүүр</Link><span aria-hidden="true">/</span><Link href="/products">Бүтээгдэхүүн</Link><span aria-hidden="true">/</span><span aria-current="page">{product.name}</span>
       </nav>
-      <Suspense fallback={<span className="detail-return" aria-hidden="true"><span>←</span>Жагсаалт руу буцах</span>}><ReturnLink searchParams={searchParams} /></Suspense>
+      <Suspense fallback={<span className="detail-return" aria-hidden="true">Жагсаалт руу буцах</span>}><ReturnLink searchParams={searchParams} /></Suspense>
       <div className="product-detail">
         <ProductGallery name={product.name}><ProductImage product={product} size="detail" priority /></ProductGallery>
         <section className="detail-information" aria-labelledby="product-title">
-          <Link className="detail-category" href={product.categoryId ? `/products?category=${product.categoryId}&sort=newest` : "/products"}>{product.category}<span aria-hidden="true">↗</span></Link>
+          <Link className="detail-category" href={product.categoryId ? `/products?category=${product.categoryId}&sort=newest` : "/products"}>{product.category}</Link>
           <p className="detail-code">Код: {product.sku}</p>
           <h1 id="product-title">{product.name}</h1><p className="detail-model">{product.label}</p>
           <div className="detail-tags" aria-label="Бүтээгдэхүүний таг">

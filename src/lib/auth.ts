@@ -11,9 +11,11 @@ export function authApiClient() {
   return createAuthApiClient(apiBaseUrl());
 }
 
+export const getSessionToken = cache(async () => (await cookies()).get(SESSION_COOKIE)?.value);
+
 // React cache deduplicates within one render only. User data never enters the shared shop cache.
 export const getSessionUser = cache(async () => {
-  const token = (await cookies()).get(SESSION_COOKIE)?.value;
+  const token = await getSessionToken();
   if (!token) return null;
   try { return await authApiClient().getUser(token); }
   catch (error) {
