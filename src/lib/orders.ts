@@ -10,12 +10,20 @@ export function ordersApiClient() {
   return createOrdersApiClient(apiBaseUrl());
 }
 
-export async function getCustomerOrder(id: string) {
+async function withOrderSession<T>(returnTo: string, operation: (api: ReturnType<typeof ordersApiClient>, token: string) => Promise<T>) {
   const token = await getSessionToken();
-  if (!token) redirect(loginHref(`/orders/${id}`));
-  try { return await ordersApiClient().getOrder(token, id); }
+  if (!token) redirect(loginHref(returnTo));
+  try { return await operation(ordersApiClient(), token); }
   catch (error) {
-    if (error instanceof ApiError && error.status === 401) redirect(loginHref(`/orders/${id}`));
+    if (error instanceof ApiError && error.status === 401) redirect(loginHref(returnTo));
     throw error;
   }
+}
+
+export function getCustomerOrder(id: string) {
+  return withOrderSession(`/orders/${id}`, (api, token) => api.getOrder(token, id));
+}
+
+export function getCustomerOrders() {
+  return withOrderSession("/orders", (api, token) => api.getOrders(token));
 }

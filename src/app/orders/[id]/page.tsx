@@ -8,6 +8,7 @@ import { validOrderId } from "@/lib/orders-api-client";
 import { CheckoutLoading } from "@/components/checkout-state";
 import { OrderReceipt } from "@/components/order-receipt";
 import "../../checkout/checkout.css";
+import "../orders.css";
 
 export const metadata: Metadata = { title: "Захиалгын дэлгэрэнгүй | Сутайн Буянт", robots: { index: false, follow: false } };
 

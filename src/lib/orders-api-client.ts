@@ -12,10 +12,13 @@ export type OrderItem = {
   id: string; productId: string | null; name: string; image?: CatalogProduct["image"];
   unitPrice: number; quantity: number; total: number;
 };
-export type CustomerOrder = {
+export type OrderSummary = {
   id: string; number: string; status: OrderStatus; statusLabel: string; total: number;
+  createdAt: string | null; itemsCount?: number;
+};
+export type CustomerOrder = OrderSummary & {
   customerName: string; customerPhone: string; shippingAddress: string;
-  note: string | null; createdAt: string | null; items: OrderItem[];
+  note: string | null; items: OrderItem[];
 };
 
 export function validOrderId(value: string) {
@@ -35,10 +38,29 @@ function text(value: unknown) {
   return value;
 }
 
-export function mapCustomerOrder(value: unknown, baseUrl: string): CustomerOrder {
+export function canCancelOrder(status: OrderStatus) { return status === "pending"; }
+
+export function mapOrderSummary(value: unknown): OrderSummary {
   const order = apiRecord(value);
   const status = text(order.status) as OrderStatus;
-  if (!Object.hasOwn(orderStatuses, status) || !Array.isArray(order.items)) throw new ApiError(502);
+  if (!Object.hasOwn(orderStatuses, status)) throw new ApiError(502);
+  if (order.items_count !== undefined && (typeof order.items_count !== "number" || !Number.isSafeInteger(order.items_count) || order.items_count < 0)) throw new ApiError(502);
+  return {
+    id: identifier(order.id), number: text(order.number), status, statusLabel: orderStatuses[status],
+    total: amount(order.total), createdAt: order.created_at === null ? null : text(order.created_at),
+    itemsCount: order.items_count as number | undefined,
+  };
+}
+
+export function sortOrdersNewest(orders: OrderSummary[]) {
+  const time = (order: OrderSummary) => Date.parse(order.createdAt ?? "") || 0;
+  return [...orders].sort((a, b) => time(b) - time(a) || Number(b.id) - Number(a.id));
+}
+
+export function mapCustomerOrder(value: unknown, baseUrl: string): CustomerOrder {
+  const order = apiRecord(value);
+  const summary = mapOrderSummary(order);
+  if (!Array.isArray(order.items)) throw new ApiError(502);
   const items = order.items.map((value: unknown) => {
     const item = apiRecord(value);
     if (typeof item.quantity !== "number" || !Number.isSafeInteger(item.quantity) || item.quantity < 1) throw new ApiError(502);
@@ -49,16 +71,29 @@ export function mapCustomerOrder(value: unknown, baseUrl: string): CustomerOrder
     };
   });
   return {
-    id: identifier(order.id), number: text(order.number), status, statusLabel: orderStatuses[status],
-    total: amount(order.total), customerName: text(order.customer_name), customerPhone: text(order.customer_phone),
+    ...summary, customerName: text(order.customer_name), customerPhone: text(order.customer_phone),
     shippingAddress: text(order.shipping_address), note: order.note === null ? null : text(order.note),
-    createdAt: order.created_at === null ? null : text(order.created_at), items,
+    items,
   };
 }
 
 export function createOrdersApiClient(baseUrl: string, fetcher: typeof fetch = fetch, timeoutMs = 10000) {
   const api = createApiClient(baseUrl, fetcher, timeoutMs);
   return {
+    async getOrders(token: string) {
+      const body = await api.request("shop/orders", { token });
+      if (!Array.isArray(body?.data)) throw new ApiError(502);
+      const orders = body.data.map((value: unknown) => mapOrderSummary(value));
+      if (new Set(orders.map((order) => order.id)).size !== orders.length) throw new ApiError(502);
+      return sortOrdersNewest(orders);
+    },
+    async cancelOrder(token: string, id: string) {
+      if (!validOrderId(id)) throw new ApiError(400);
+      const body = await api.request(`shop/orders/${id}/cancel`, { method: "POST", token });
+      const order = mapOrderSummary(body?.data);
+      if (order.id !== id || order.status !== "cancelled") throw new ApiError(502);
+      return { id: order.id, status: "cancelled" as const };
+    },
     async createOrder(token: string, values: CheckoutValues) {
       const body = await api.request("shop/orders", {
         method: "POST", token,
