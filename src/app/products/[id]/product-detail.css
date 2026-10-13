@@ -46,12 +46,6 @@
   padding: 35px;
   cursor: zoom-in;
 }
-.detail-image-button .parts-art {
-  transition: transform 0.2s;
-}
-.detail-image-button:hover .parts-art {
-  transform: scale(1.035);
-}
 .image-zoom-label {
   position: absolute;
   right: 15px;
@@ -165,7 +159,7 @@
   font-weight: 500;
 }
 .quantity-control button:hover:not(:disabled) {
-  background: #edf1f5;
+  background: var(--surface-soft);
 }
 .quantity-control button:disabled {
   color: #c0c8d0;
@@ -207,7 +201,7 @@
 .purchase-status {
   min-height: 27px;
   margin-top: 10px;
-  color: #52677b;
+  color: var(--muted);
   font-size: 11px;
   line-height: 1.6;
 }
@@ -282,7 +276,7 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: #edf1f5;
+  background: var(--surface-soft);
   color: var(--ink);
   font-size: 25px;
 }
@@ -400,12 +394,38 @@
     padding: 8px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .detail-image-button .parts-art {
-    transition: none;
-  }
-}
+
 
 .detail-image-button > .product-photo { height: 100%; }
 .image-dialog-art > .product-photo { height: 100%; }
 .detail-description p { white-space: pre-line; }
+
+@media (max-width: 700px) {
+  .product-purchase {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 5;
+    border-bottom: 0;
+    background: var(--surface);
+    padding: 12px max(16px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    box-shadow: 0 -6px 24px #102a4012;
+  }
+  .product-purchase .purchase-row, .product-purchase .purchase-status {
+    max-width: 520px;
+    margin-inline: auto;
+  }
+  .product-purchase .purchase-row { align-items: center; }
+  .product-purchase .quantity-field label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .product-purchase .purchase-status { min-height: 18px; margin-top: 8px; text-align: center; }
+  .detail-page:has(.product-purchase) { padding-bottom: calc(35px + 140px + env(safe-area-inset-bottom)); }
+  body:has(.product-purchase) .site-footer { padding-bottom: calc(40px + 140px + env(safe-area-inset-bottom)); }
+}

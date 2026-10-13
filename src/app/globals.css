@@ -229,41 +229,6 @@ svg {
   font-size: 8px;
   letter-spacing: 0.14em;
 }
-.parts-art {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-}
-.parts-art svg {
-  width: 100%;
-  height: 100%;
-}
-.hero-art .parts-art {
-  position: absolute;
-  filter: drop-shadow(0 20px 18px #020e1999);
-}
-.hero-brake {
-  width: 65%;
-  height: 73%;
-  left: 0;
-  top: 9%;
-  transform: rotate(-15deg);
-}
-.hero-oil {
-  width: 50%;
-  height: 70%;
-  right: -1%;
-  top: 20%;
-  transform: rotate(5deg);
-}
-.hero-tire {
-  width: 50%;
-  height: 63%;
-  left: -6%;
-  bottom: -1%;
-  transform: rotate(-9deg);
-}
 .hero-art-line {
   position: absolute;
   width: 90px;
@@ -314,14 +279,6 @@ h2 {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 13px;
-}
-.category-card .parts-art {
-  width: 61px;
-  height: 59px;
-  flex-shrink: 0;
-  background: var(--surface-soft);
-  border-radius: 10px;
-  padding: 3px;
 }
 .category-card h3 {
   font-size: 13px;
@@ -850,10 +807,6 @@ input::placeholder {
     padding: 13px;
     gap: 10px;
   }
-  .category-card .parts-art {
-    width: 48px;
-    height: 53px;
-  }
   .category-card p {
     font-size: 9px;
   }
@@ -948,24 +901,6 @@ input::placeholder {
     left: 83px;
     top: 41px;
   }
-  .hero-brake {
-    left: 1%;
-    top: 3%;
-    width: 65%;
-    height: 77%;
-  }
-  .hero-tire {
-    left: -2%;
-    bottom: -1%;
-    width: 48%;
-    height: 65%;
-  }
-  .hero-oil {
-    top: 18%;
-    right: -2%;
-    width: 53%;
-    height: 78%;
-  }
   .hero-art-line {
     bottom: 21px;
     right: 23px;
@@ -992,11 +927,6 @@ input::placeholder {
     display: block;
     padding: 14px 12px;
     border-radius: 12px;
-  }
-  .category-card .parts-art {
-    width: 53px;
-    height: 49px;
-    margin-bottom: 10px;
   }
   .category-card h3 {
     font-size: 12px;
@@ -1198,8 +1128,6 @@ input::placeholder {
 .shop-category-card { align-items: center; }
 .shop-category-card > div:last-child { min-width: 0; }
 .shop-category-card p { overflow-wrap: anywhere; }
-.shop-home-loading { padding-block: 30px; min-height: 550px; }
-.shop-home-loading .skeleton-card { margin-bottom: 25px; height: 380px; }
 .shop-error { padding-block: 75px; min-height: 450px; }
 .shop-error h1 { font-size: 27px; }
 .shop-error p { margin-block: 12px 24px; color: var(--muted); }

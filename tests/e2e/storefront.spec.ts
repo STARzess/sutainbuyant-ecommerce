@@ -18,7 +18,7 @@ async function cart(page: Page) {
 async function noOverflow(page: Page) { expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBeTruthy(); }
 test.beforeEach(async ({ request }) => { await request.post(`${control}/reset`); });
 
-test("catalog URL filters, sorting, pagination, empty search and return preserve selection", async ({ page }) => {
+test("Catalog", async ({ page }) => {
   await page.goto("/products"); await expect(page.locator(".catalog-grid .product-card")).toHaveCount(9);
   await page.locator('input[name="category"][value="3"]').check(); await page.locator('select[name="tag"]').selectOption("2");
   await page.locator('input[name="min"]').fill("24000"); await page.locator('input[name="max"]').fill("24000"); await page.locator('input[name="q"]').fill("Бүтээгдэхүүн 24"); await page.locator('select[name="sort"]').selectOption("price-asc");
@@ -32,14 +32,14 @@ test("catalog URL filters, sorting, pagination, empty search and return preserve
   await page.goto("/products?min=100&max=0"); await expect(page.locator("#price-error")).toBeVisible();
 });
 
-test("dynamic metadata is in head, related products and keyboard image dialog work", async ({ page }) => {
+test("Details", async ({ page }) => {
   await page.goto("/products/24"); await expect(page.locator("#product-title")).toHaveText("Бүтээгдэхүүн 24");
   await expect(page).toHaveTitle(/Бүтээгдэхүүн 24/); await expect(page.locator('head meta[name="description"]')).toHaveAttribute("content", /Бүтээгдэхүүн 24/);
   await expect(page.locator('head meta[name="robots"]')).toHaveAttribute("content", "index, follow"); await expect(page.locator(".detail-related .product-card")).toHaveCount(4);
   await page.getByRole("button", { name: /зургийг томруулах/ }).click(); await expect(page.getByRole("dialog")).toBeVisible(); await page.keyboard.press("Escape"); await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
-test("React Context cart survives refresh and synchronizes quantity/removal across tabs", async ({ page, context }) => {
+test("Cart", async ({ page, context }) => {
   await cart(page); await page.locator(".header-cart-link").click(); await expect(page.locator('[data-testid="cart-total"]')).toHaveText("24,000 ₮");
   await page.reload(); await expect(page.locator(".cart-item")).toHaveCount(1);
   const other = await context.newPage(); await other.goto("/cart"); await other.getByRole("button", { name: /тоо ширхэг нэмэх/ }).click(); await expect(page.locator('[data-testid="cart-total"]')).toHaveText("48,000 ₮");
@@ -47,14 +47,14 @@ test("React Context cart survives refresh and synchronizes quantity/removal acro
   await expect.poll(() => page.evaluate(key => JSON.parse(localStorage.getItem(key) || "[]"), cartKey)).toEqual([]);
 });
 
-test("anonymous private pages redirect and mutation endpoints require a cookie", async ({ page, request }) => {
+test("Authorization", async ({ page, request }) => {
   for (const next of ["/account", "/orders", "/checkout"]) { await page.goto(next); await page.waitForURL(url => url.pathname === "/login" && url.searchParams.get("next") === next); }
   for (const route of ["profile", "profile/password"]) expect((await request.put(`/api/shop/${route}`, { headers: { Origin: origin }, data: {} })).status()).toBe(401);
   expect((await request.post("/api/shop/orders", { headers: { Origin: origin }, data: {} })).status()).toBe(401);
   expect((await state(request)).counters.order).toBe(0);
 });
 
-test("registration confirmation and duplicate email are field errors; safe session is never browser storage", async ({ page, context }) => {
+test("Registration", async ({ page, context }) => {
   await page.goto("/register"); await page.getByLabel("Нэр", { exact: true }).fill("Шинэ хэрэглэгч"); await page.getByLabel("Имэйл хаяг", { exact: true }).fill("bat@example.test"); await page.getByLabel("Нууц үг", { exact: true }).fill("qa-password"); await page.getByLabel("Нууц үг давтах", { exact: true }).fill("different");
   await page.getByRole("button", { name: "Бүртгүүлэх", exact: true }).click(); await expect(page.locator('[name="password_confirmation"]')).toHaveAttribute("aria-invalid", "true");
   await page.getByLabel("Нууц үг давтах", { exact: true }).fill("qa-password"); await page.getByRole("button", { name: "Бүртгүүлэх", exact: true }).click(); await expect(page.locator(".form-field-error")).toContainText("Энэ имэйл хаяг бүртгэлтэй байна.");
@@ -64,7 +64,7 @@ test("registration confirmation and duplicate email are field errors; safe sessi
   await page.reload(); await expect(page.locator(".account-welcome")).toContainText("Шинэ хэрэглэгч");
 });
 
-test("optimistic profile updates immediately, rolls back on failure and commits confirmed values", async ({ page, request }) => {
+test("Profile", async ({ page, request }) => {
   await login(page); await flags(request, { profileWriteFailure: true });
   await details(page).getByLabel("Нэр", { exact: true }).fill("Бат шинэ"); await details(page).getByRole("button", { name: "Мэдээлэл хадгалах", exact: true }).click();
   await expect(page.locator(".account-welcome")).toContainText("Бат шинэ"); await expect(page.getByRole("button", { name: "Гарах", exact: true })).toBeDisabled();
@@ -73,7 +73,7 @@ test("optimistic profile updates immediately, rolls back on failure and commits 
   await page.reload(); await expect(page.locator(".account-welcome")).toContainText("Бат шинэ"); expect((await state(request)).counters.profile).toBe(2);
 });
 
-test("password validation, successful reset and logout preserve cart without exposing secrets", async ({ page, context }) => {
+test("Password", async ({ page, context }) => {
   await cart(page); await login(page); await password(page).getByLabel("Одоогийн нууц үг", { exact: true }).fill("wrong-password"); await password(page).getByLabel("Шинэ нууц үг", { exact: true }).fill("new-password"); await password(page).getByLabel("Нууц үг давтах", { exact: true }).fill("new-password"); await password(page).getByRole("button", { name: "Нууц үг солих", exact: true }).click();
   await expect(password(page).locator(".form-field-error")).toHaveText("Одоогийн нууц үг буруу байна."); await password(page).getByLabel("Одоогийн нууц үг", { exact: true }).fill("qa-password");
   await password(page).getByRole("button", { name: "Шинэ нууц үг харуулах", exact: true }).click(); await password(page).getByRole("button", { name: "Нууц үг солих", exact: true }).click(); await expect(password(page).locator(".profile-success")).toHaveText("Нууц үг амжилттай солигдлоо.");
@@ -82,7 +82,7 @@ test("password validation, successful reset and logout preserve cart without exp
   expect(await page.evaluate(key => JSON.parse(localStorage.getItem(key) || "[]").length, cartKey)).toBe(1);
 });
 
-test("checkout validates fields, handles 422, prevents double clicks and clears purchased cart", async ({ page, request }) => {
+test("Checkout", async ({ page, request }) => {
   await cart(page); await login(page, "/checkout"); await page.getByRole("button", { name: "Захиалгаа баталгаажуулах", exact: true }).click(); await expect(page.locator('[name="customer_phone"]')).toHaveAttribute("aria-invalid", "true");
   await page.getByLabel("Утасны дугаар", { exact: true }).fill("99112233"); await page.getByLabel("Хүргэлтийн хаяг", { exact: true }).fill("Хан-Уул дүүрэг, 1 хороо, 1 байр, 1 тоот"); await flags(request, { checkoutInvalid: true });
   await page.getByRole("button", { name: "Захиалгаа баталгаажуулах", exact: true }).click(); await expect(page.locator('[name="customer_phone"]')).toHaveAttribute("aria-invalid", "true"); expect(await page.evaluate(key => JSON.parse(localStorage.getItem(key) || "[]").length, cartKey)).toBe(1);
@@ -90,7 +90,7 @@ test("checkout validates fields, handles 422, prevents double clicks and clears 
   await page.waitForURL(url => /^\/orders\/\d+$/.test(url.pathname)); await expect(page.locator(".order-heading h1")).toContainText("ORD-"); expect((await state(request)).counters.order).toBe(2); expect(await page.evaluate(key => JSON.parse(localStorage.getItem(key) || "[]").length, cartKey)).toBe(0);
 });
 
-test("owned orders list/filter/detail and confirmed cancellation update status without duplicate writes", async ({ page, request }) => {
+test("Orders", async ({ page, request }) => {
   await login(page, "/orders"); await expect(page.locator(".orders-card")).toHaveCount(3); expect(await page.content()).not.toContain("PRIVATE-DELIVERY");
   await page.getByLabel("Захиалгын төлөв", { exact: true }).selectOption("pending"); await expect(page.locator(".orders-card")).toHaveCount(1); await page.getByRole("link", { name: "ORD-101 дэлгэрэнгүй", exact: true }).click();
   await page.getByRole("button", { name: "Захиалга цуцлах", exact: true }).click(); await page.getByRole("button", { name: "Болих", exact: true }).click(); expect((await state(request)).counters.cancel).toBe(0);
@@ -98,7 +98,7 @@ test("owned orders list/filter/detail and confirmed cancellation update status w
   await page.getByRole("link", { name: "Миний захиалгууд", exact: true }).click(); await page.getByLabel("Захиалгын төлөв", { exact: true }).selectOption("all"); await expect(page.locator('.orders-card[data-order-id="101"] .order-status')).toHaveText("Цуцлагдсан");
 });
 
-test("CSRF, forged identity/prices and other-user order disclosure are rejected", async ({ page }) => {
+test("Security", async ({ page }) => {
   await login(page);
   const evil = await page.request.put("/api/shop/profile", { headers: { Origin: "https://evil.example" }, data: { name: "Bad", email: "bad@example.test" } }); expect(evil.status()).toBe(403);
   const forbidden = await page.request.post("/api/shop/orders/900/cancel", { headers: { Origin: origin }, data: {} }); expect(forbidden.status()).toBe(404); expect(await forbidden.text()).not.toContain("PRIVATE-DELIVERY");
@@ -108,19 +108,19 @@ test("CSRF, forged identity/prices and other-user order disclosure are rejected"
   const afterOrder = await state(page.request); expect(afterOrder.writes.at(-1).userId).toBe(1); expect(afterOrder.writes.at(-1).itemFields).toEqual(["product_id", "quantity"]); expect(afterOrder.orders.find((item: { id: number }) => item.id === 201).total).toBe(24000);
 });
 
-test("API cart failure shows retry, with no false total", async ({ page }) => {
+test("Retry", async ({ page }) => {
   await cart(page); await page.route("**/api/shop/cart-products?*", route => route.fulfill({ status: 503, contentType: "application/json", body: "{}" })); await page.goto("/cart"); await expect(page.getByRole("heading", { name: "Бүтээгдэхүүнийг ачаалж чадсангүй", exact: true })).toBeVisible(); await expect(page.locator('[data-testid="cart-total"]')).toHaveCount(0);
   await page.unroute("**/api/shop/cart-products?*"); await page.getByRole("button", { name: "Дахин оролдох", exact: true }).click(); await expect(page.locator('[data-testid="cart-total"]')).toHaveText("24,000 ₮");
 });
 
-test("dark mode persists and public/private screens fit mobile and desktop", async ({ page }) => {
+test("Responsive", async ({ page }) => {
   await page.goto("/"); await page.getByRole("button", { name: "Харанхуй горимд шилжих", exact: true }).click(); await expect(page.locator("html")).toHaveAttribute("data-theme", "dark"); await page.reload(); await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   for (const width of [320, 390, 768, 1440]) { await page.setViewportSize({ width, height: 1000 }); for (const route of ["/", "/products", "/products/24", "/cart", "/login"]) { await page.goto(route); await page.locator("main h1").first().waitFor(); await noOverflow(page); } }
   await login(page); await noOverflow(page); await page.goto("/orders"); await noOverflow(page);
 });
 
 for (const theme of ["light", "dark"] as const) {
-  test(`${theme} pages meet automated WCAG accessibility checks`, async ({ page }) => {
+  test(`Accessibility (${theme})`, async ({ page }) => {
     await page.addInitScript(value => localStorage.setItem("sutainbuyant.theme.v1", value), theme);
     for (const route of ["/", "/products", "/products/24", "/login", "/register", "/cart"]) {
       await page.goto(route); await page.locator("main h1").first().waitFor();

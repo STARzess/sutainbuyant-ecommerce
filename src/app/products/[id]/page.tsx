@@ -10,6 +10,7 @@ import { ProductImage } from "@/components/product-image";
 import type { CatalogProduct, SearchParams } from "@/lib/catalog";
 import { formatPrice } from "@/lib/format";
 import { getCatalogReturnHref, getProductDescription } from "@/lib/product-details";
+import { defaultSocialImage } from "@/lib/social-metadata";
 import { getShopProduct } from "@/lib/shop-api";
 import "./product-detail.css";
 
@@ -27,8 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = `${product.name}. ${product.label}. Код: ${product.sku}. Үнэ: ${formatPrice(product.price)}. ${getProductDescription(product)}`;
   return {
     title, description, alternates: { canonical: `/products/${product.id}` },
-    openGraph: { title, description, type: "website", locale: "mn_MN", siteName: "Сутайн Буянт", images: product.image ? [product.image.url] : undefined },
-    twitter: { card: "summary_large_image", title, description, images: product.image ? [product.image.url] : undefined },
+    openGraph: { title, description, type: "website", locale: "mn_MN", siteName: "Сутайн Буянт", images: product.image ? [product.image.url] : [defaultSocialImage] },
+    twitter: { card: "summary_large_image", title, description, images: product.image ? [product.image.url] : [defaultSocialImage] },
   };
 }
 

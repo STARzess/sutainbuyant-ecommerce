@@ -4,7 +4,7 @@ import { getSessionUser } from "@/lib/auth";
 import { safeReturnTo, type AuthMode } from "@/lib/auth-validation";
 import { AuthForm } from "./auth-form";
 
-export function AuthFrame({ mode, children }: { mode: AuthMode; children: React.ReactNode }) {
+export function AuthFrame({ mode, children, localLogout = false }: { mode: AuthMode; children: React.ReactNode; localLogout?: boolean }) {
   const registering = mode === "register";
   return (
     <div className="container auth-page">
@@ -20,6 +20,7 @@ export function AuthFrame({ mode, children }: { mode: AuthMode; children: React.
         <section className="auth-panel" aria-labelledby="auth-title">
           <h1 id="auth-title">{registering ? "Бүртгүүлэх" : "Тавтай морил"}</h1>
           <p className="auth-subtitle">{registering ? "Мэдээллээ оруулж, шинэ бүртгэл үүсгээрэй." : "Имэйл хаяг, нууц үгээрээ нэвтрээрэй."}</p>
+          {localLogout && <p className="auth-notice" role="status">Энэ төхөөрөмжөөс гарлаа. Сервер дээрх нэвтрэх эрхийг цуцалсныг баталгаажуулж чадсангүй.</p>}
           {children}
         </section>
       </div>
@@ -31,7 +32,7 @@ export async function AuthPageContent({ mode, searchParams }: { mode: AuthMode; 
   const params = await searchParams;
   const returnTo = safeReturnTo(params.next);
   if (await getSessionUser()) redirect(returnTo);
-  return <AuthFrame mode={mode}><AuthForm mode={mode} returnTo={returnTo} /></AuthFrame>;
+  return <AuthFrame mode={mode} localLogout={mode === "login" && params.logout === "local"}><AuthForm mode={mode} returnTo={returnTo} /></AuthFrame>;
 }
 
 export function AuthPageLoading({ mode }: { mode: AuthMode }) {

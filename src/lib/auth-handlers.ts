@@ -37,9 +37,18 @@ export async function handleLogout(request: NextRequest) {
   try {
     verifyMutationOrigin(request);
     const options = sessionCookieOptions(request);
+    const input = await readJsonBody(request, 1024);
+    if (!input || typeof input !== "object" || Array.isArray(input)) throw new ApiError(400);
     const token = request.cookies.get(SESSION_COOKIE)?.value;
-    if (token) await authApiClient().logout(token);
-    const response = privateJson({ message: "Амжилттай гарлаа." });
+    let revocationConfirmed = true;
+    if (token) {
+      try { await authApiClient().logout(token); }
+      catch { revocationConfirmed = false; }
+    }
+    const response = privateJson({
+      message: revocationConfirmed ? "Амжилттай гарлаа." : "Энэ төхөөрөмжөөс гарлаа. Сервер дээрх нэвтрэх эрхийг цуцалсныг баталгаажуулж чадсангүй.",
+      revocationConfirmed,
+    });
     response.cookies.set(SESSION_COOKIE, "", { ...options, maxAge: 0 });
     return response;
   } catch (error) { return authError(error); }

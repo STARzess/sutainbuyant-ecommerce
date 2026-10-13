@@ -9,7 +9,7 @@ import { CheckoutLoading } from "@/components/checkout-state";
 import "../checkout/checkout.css";
 import "./orders.css";
 
-export const metadata: Metadata = { title: "Миний захиалгууд | Сутайн Буянт", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Миний захиалгууд | Сутайн Буянт", description: "Өөрийн захиалгуудын жагсаалт, төлөв болон дэлгэрэнгүй мэдээллийг харах.", robots: { index: false, follow: false } };
 
 async function OrdersContent() {
   await requireUser("/orders");

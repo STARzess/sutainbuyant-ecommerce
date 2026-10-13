@@ -17,6 +17,7 @@ export function CheckoutForm({ initialName }: { initialName: string }) {
   const router = useRouter();
   const cart = useCart();
   const productData = useCartProducts(cart.items);
+  const [delivery, setDelivery] = useState({ customer_name: initialName, customer_phone: "", shipping_address: "", note: "" });
   const [snapshot, setSnapshot] = useState<{ items: CartItem[]; products: CatalogProduct[] } | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [cleanupFailed, setCleanupFailed] = useState(false);
@@ -68,10 +69,10 @@ export function CheckoutForm({ initialName }: { initialName: string }) {
         router.replace(`/orders/${result.order.id}`);
         router.refresh();
       }}>
-        <FormField id={fieldId("name")} name="customer_name" label="Хүлээн авагчийн нэр" autoComplete="name" defaultValue={initialName} maxLength={100} required disabled={form.pending} errors={form.errors.customer_name} />
-        <FormField id={fieldId("phone")} name="customer_phone" label="Утасны дугаар" type="tel" inputMode="tel" autoComplete="tel" maxLength={20} placeholder="9911 2233" required disabled={form.pending} errors={form.errors.customer_phone} />
-        <FormTextArea id={fieldId("address")} name="shipping_address" label="Хүргэлтийн хаяг" autoComplete="shipping street-address" rows={3} maxLength={500} placeholder="Дүүрэг, хороо, байр, тоот" required disabled={form.pending} errors={form.errors.shipping_address} />
-        <FormTextArea id={fieldId("note")} name="note" label="Тэмдэглэл" hint="Заавал бөглөх шаардлагагүй." rows={2} maxLength={1000} placeholder="Хүргэлттэй холбоотой нэмэлт мэдээлэл" disabled={form.pending} errors={form.errors.note} />
+        <FormField id={fieldId("name")} name="customer_name" label="Хүлээн авагчийн нэр" autoComplete="name" value={delivery.customer_name} onChange={event => setDelivery(current => ({ ...current, customer_name: event.target.value }))} maxLength={100} required disabled={form.pending} errors={form.errors.customer_name} />
+        <FormField id={fieldId("phone")} name="customer_phone" label="Утасны дугаар" type="tel" inputMode="tel" autoComplete="tel" value={delivery.customer_phone} onChange={event => setDelivery(current => ({ ...current, customer_phone: event.target.value }))} maxLength={20} placeholder="9911 2233" required disabled={form.pending} errors={form.errors.customer_phone} />
+        <FormTextArea id={fieldId("address")} name="shipping_address" label="Хүргэлтийн хаяг" autoComplete="shipping street-address" value={delivery.shipping_address} onChange={event => setDelivery(current => ({ ...current, shipping_address: event.target.value }))} rows={3} maxLength={500} placeholder="Дүүрэг, хороо, байр, тоот" required disabled={form.pending} errors={form.errors.shipping_address} />
+        <FormTextArea id={fieldId("note")} name="note" label="Тэмдэглэл" hint="Заавал бөглөх шаардлагагүй." value={delivery.note} onChange={event => setDelivery(current => ({ ...current, note: event.target.value }))} rows={2} maxLength={1000} placeholder="Хүргэлттэй холбоотой нэмэлт мэдээлэл" disabled={form.pending} errors={form.errors.note} />
         <p className="form-message" role="alert">{form.message}</p>
         <button className="button primary checkout-submit" type="submit" disabled={form.pending}>{form.pending ? <><span className="form-spinner" aria-hidden="true" />Захиалгыг илгээж байна…</> : <>Захиалгаа баталгаажуулах </>}</button>
         <span className="sr-only" role="status">{form.pending ? "Захиалгыг боловсруулж байна." : ""}</span>

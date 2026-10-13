@@ -10,7 +10,7 @@ import { OrderReceipt } from "@/components/order-receipt";
 import "../../checkout/checkout.css";
 import "../orders.css";
 
-export const metadata: Metadata = { title: "Захиалгын дэлгэрэнгүй | Сутайн Буянт", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Захиалгын дэлгэрэнгүй | Сутайн Буянт", description: "Захиалсан бүтээгдэхүүн, үнийн дүн, хүргэлтийн мэдээлэл болон захиалгын төлөвийг харах.", robots: { index: false, follow: false } };
 
 async function OrderContent({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

@@ -1,7 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./tests/e2e", testMatch: "**/storefront.spec.ts", fullyParallel: false, workers: 1,
+  testDir: "./tests/e2e", testMatch: ["**/storefront.spec.ts", "**/checkout-draft.spec.ts", "**/logout-outage.spec.ts", "**/frontend.spec.ts", "**/metadata.spec.ts"], fullyParallel: false, workers: 1,
   timeout: 45000, retries: process.env.CI ? 1 : 0,
   reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report/flows" }]],
   use: { baseURL: "http://127.0.0.1:3105", headless: true, channel: process.env.PLAYWRIGHT_CHANNEL || undefined, viewport: { width: 1440, height: 1000 }, trace: "retain-on-failure", screenshot: "only-on-failure" },

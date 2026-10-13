@@ -9,7 +9,7 @@ import "../auth.css";
 import "../orders/orders.css";
 import "./profile.css";
 
-export const metadata: Metadata = { title: "Миний бүртгэл | Сутайн Буянт", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Миний бүртгэл | Сутайн Буянт", description: "Бүртгэлийн мэдээллээ шинэчлэх, нууц үгээ солих болон захиалгуудаа харах.", robots: { index: false, follow: false } };
 
 async function AccountContent() {
   const user = await requireUser("/account");

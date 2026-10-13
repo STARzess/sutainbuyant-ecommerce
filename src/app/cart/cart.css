@@ -14,7 +14,6 @@
 .cart-item { display: grid; grid-template-columns: 105px minmax(0, 1fr) 114px 104px; gap: 0 18px; padding: 24px; align-items: center; }
 .cart-item + .cart-item, .cart-unavailable + li, li + .cart-unavailable { border-top: 1px solid var(--line); }
 .cart-item-image { display: grid; place-items: center; background: var(--paper); border-radius: 11px; grid-row: 1 / 3; aspect-ratio: 1; }
-.cart-item-image .parts-art { width: 100%; height: 100%; }
 .cart-item-image svg { width: 100%; height: 100%; }
 .cart-item-info { min-width: 0; grid-row: 1 / 3; }
 .cart-item-category { color: var(--muted); font-size: 9px; margin-bottom: 5px; }

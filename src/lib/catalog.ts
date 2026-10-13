@@ -31,7 +31,6 @@ export type CatalogQuery = {
   page: number;
 };
 export type SearchParams = Record<string, string | string[] | undefined>;
-export const PAGE_SIZE = 9;
 
 function first(value: string | string[] | undefined) {
   return (Array.isArray(value) ? value[0] : value) ?? "";

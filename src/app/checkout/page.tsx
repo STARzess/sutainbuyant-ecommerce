@@ -6,7 +6,7 @@ import { CheckoutForm } from "@/components/checkout-form";
 import { CheckoutLoading } from "@/components/checkout-state";
 import "./checkout.css";
 
-export const metadata: Metadata = { title: "Захиалга хийх | Сутайн Буянт", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Захиалга хийх | Сутайн Буянт", description: "Сагсанд сонгосон бүтээгдэхүүний хүргэлтийн мэдээллийг бөглөж, захиалгаа баталгаажуулах.", robots: { index: false, follow: false } };
 
 async function CheckoutContent() {
   const user = await requireUser("/checkout");

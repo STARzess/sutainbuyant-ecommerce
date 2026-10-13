@@ -7,6 +7,7 @@ import { CartLink, HeaderCartLink } from "@/components/cart-link";
 import { AppProviders } from "@/components/app-providers";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { themeBootstrap } from "@/lib/theme";
+import { defaultSocialImage } from "@/lib/social-metadata";
 import { siteUrl } from "@/lib/site-url";
 import { AccountLink } from "@/components/account-link";
 import "./globals.css";
@@ -22,7 +23,9 @@ export const metadata: Metadata = {
     title: "Сутайн Буянт | Онлайн дэлгүүр",
     locale: "mn_MN",
     siteName: "Сутайн Буянт",
+    images: [defaultSocialImage],
   },
+  twitter: { card: "summary_large_image", images: [defaultSocialImage] },
   robots: { index: true, follow: true },
 };
 
@@ -50,7 +53,7 @@ export default function RootLayout({
                 alt="Сутайн Буянт"
                 width={175}
                 height={45}
-                priority
+                preload
               />
             </Link>
             <Suspense fallback={<NavigationLinks />}>
