@@ -1,0 +1,1 @@
+export const themeBootstrap = `(function(){var t;try{t=localStorage.getItem('sutainbuyant.theme.v1')}catch(e){}document.documentElement.dataset.theme=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'})()`;

@@ -2,7 +2,8 @@ import "server-only";
 import { ApiError, createApiClient } from "./api-client";
 
 export function apiBaseUrl() {
-  const value = process.env.API_BASE_URL;
+  const environment = process.env;
+  const value = environment.NEXT_PUBLIC_API_URL;
   if (!value) throw new ApiError(500);
   return value;
 }

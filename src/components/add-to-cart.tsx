@@ -1,36 +1,11 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useState } from "react";
+import { useCart, updateStoredCart } from "@/lib/cart-store";
 import {
   addCartItem,
-  parseCart,
-  CART_STORAGE_KEY,
   MAX_CART_QUANTITY,
 } from "@/lib/cart";
-
-const CART_CHANGE_EVENT = "sutainbuyant:cart-change";
-
-function subscribe(onChange: () => void) {
-  const onStorage = (event: StorageEvent) => {
-    if (event.key === CART_STORAGE_KEY || event.key === null) onChange();
-  };
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(CART_CHANGE_EVENT, onChange);
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(CART_CHANGE_EVENT, onChange);
-  };
-}
-function snapshot() {
-  try {
-    return window.localStorage.getItem(CART_STORAGE_KEY) ?? "";
-  } catch {
-    return "";
-  }
-}
-function serverSnapshot() {
-  return "";
-}
 
 export function AddToCart({
   productId,
@@ -39,8 +14,8 @@ export function AddToCart({
   productId: string;
   productName: string;
 }) {
-  const rawCart = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
-  const cart = useMemo(() => parseCart(rawCart), [rawCart]);
+  const state = useCart();
+  const cart = state.items;
   const count = cart.find((item) => item.id === productId)?.quantity ?? 0;
   const [quantity, setQuantity] = useState("1");
   const [notice, setNotice] = useState("");
@@ -61,15 +36,12 @@ export function AddToCart({
           return;
         }
         try {
-          const current = parseCart(
-            window.localStorage.getItem(CART_STORAGE_KEY),
-          );
-          const before =
-            current.find((item) => item.id === productId)?.quantity ?? 0;
-          const next = addCartItem(current, productId, number);
+          let before = 0;
+          const next = updateStoredCart(current => {
+            before = current.find(item => item.id === productId)?.quantity ?? 0;
+            return addCartItem(current, productId, number);
+          });
           const after = next.find((item) => item.id === productId)!.quantity;
-          window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(next));
-          window.dispatchEvent(new Event(CART_CHANGE_EVENT));
           setNotice(
             after > before
               ? `${after - before} ширхэг сагсанд нэмэгдлээ.`
@@ -142,7 +114,7 @@ export function AddToCart({
         <button
           type="submit"
           className="button primary add-cart-button"
-          disabled={count >= MAX_CART_QUANTITY}
+          disabled={!state.ready || !state.storageAvailable || count >= MAX_CART_QUANTITY}
         >
           <svg
             width="20"

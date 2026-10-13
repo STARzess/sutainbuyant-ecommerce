@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatOrderDate, type CustomerOrder } from "@/lib/orders-api-client";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 import { ProductImage } from "./product-image";
 import { OrderStatusBadge } from "./order-status";
 import { CancelOrder } from "./cancel-order";

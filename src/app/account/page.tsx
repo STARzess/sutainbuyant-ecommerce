@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { requireUser } from "@/lib/auth";
+import { AccountIdentity } from "@/components/account-identity";
 import { ProfileForm, PasswordForm } from "@/components/profile-forms";
 import { LogoutButton } from "@/components/logout-button";
 import "../auth.css";
@@ -13,11 +14,7 @@ export const metadata: Metadata = { title: "Миний бүртгэл | Сута
 async function AccountContent() {
   const user = await requireUser("/account");
   return <div className="profile-layout"><section className="account-card" aria-labelledby="account-title">
-    <div className="account-avatar" aria-hidden="true">{user.name.slice(0, 1).toUpperCase()}</div>
-    <p className="auth-panel-eyebrow">ТАНЫ БҮРТГЭЛ</p>
-    <h1 id="account-title">Миний бүртгэл</h1>
-    <p className="account-welcome">Сайн байна уу, {user.name}.</p>
-    <dl className="account-details"><div><dt>Нэр</dt><dd>{user.name}</dd></div><div><dt>Имэйл хаяг</dt><dd>{user.email || "Бүртгэгдээгүй"}</dd></div></dl>
+    <AccountIdentity initialUser={user} />
     <Link className="button account-orders-link" href="/orders">Миний захиалгууд</Link>
     <Link className="button primary account-browse" href="/products">Бүтээгдэхүүн үзэх </Link>
     <LogoutButton />

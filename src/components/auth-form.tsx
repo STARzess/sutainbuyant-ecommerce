@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useId, useRef } from "react";
 import { FormField } from "./form-field";
+import { useSession } from "@/lib/session-context";
 import { useApiForm } from "@/lib/use-api-form";
 import { safeReturnTo, validateAuthValues, type AuthMode, type SessionUser } from "@/lib/auth-validation";
 
 export function AuthForm({ mode, returnTo }: { mode: AuthMode; returnTo: string }) {
   const router = useRouter();
+  const session = useSession();
   const formRef = useRef<HTMLFormElement>(null);
   const formId = useId();
   const fieldId = (name: string) => `${mode}-${name}-${formId}`;
@@ -29,7 +31,7 @@ export function AuthForm({ mode, returnTo }: { mode: AuthMode; returnTo: string 
       const validation = validateAuthValues(mode, Object.fromEntries(new FormData(event.currentTarget)));
       if (!validation.valid) { form.showValidation(validation.errors); focusError(); return; }
       const result = await form.submit(validation.values);
-      if (result?.user) { router.replace(destination); router.refresh(); }
+      if (result?.user) { session.setUser(result.user); router.replace(destination); router.refresh(); }
       else focusError();
     }}>
       {registering && <FormField id={fieldId("name")} name="name" label="Нэр" autoComplete="name" required maxLength={255} placeholder="Таны нэр" errors={form.errors.name} disabled={form.pending} />}

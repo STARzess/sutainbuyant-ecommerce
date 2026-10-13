@@ -11,7 +11,7 @@ export function CartLink({ active = false }: { active?: boolean }) {
   return (
     <Link
       className="header-cart-link"
-      href="/cart"
+      href="/cart" prefetch={false}
       aria-current={active ? "page" : undefined}
       aria-label={quantity ? `Сагс, ${quantity} ширхэг бүтээгдэхүүн` : "Сагс"}
     >

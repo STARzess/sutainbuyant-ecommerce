@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSession } from "./session-context";
 import type { FieldErrors } from "./api-client";
 
 type ApiFormOptions = { method?: "POST" | "PUT"; onError?: (status: number) => void; networkErrorMessage?: string };
 
 export function useApiForm<T>(endpoint: string, options: ApiFormOptions = {}) {
+  const session = useSession();
   const [pending, setPending] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState("");
@@ -43,6 +45,7 @@ export function useApiForm<T>(endpoint: string, options: ApiFormOptions = {}) {
       if (!response.ok) {
         setErrors(body.errors && typeof body.errors === "object" ? body.errors : {});
         setMessage(typeof body.message === "string" ? body.message : "Хүсэлт амжилтгүй боллоо. Дахин оролдоно уу.");
+        if (response.status === 401) session.setUser(null);
         options.onError?.(response.status);
         return null;
       }

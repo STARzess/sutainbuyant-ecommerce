@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { HomeSkeleton } from "@/components/home-skeleton";
 import { ProductCard } from "@/components/product-card";
 import { ProductImage } from "@/components/product-image";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 import { defaultShopQuery, getShopOptions, getShopProducts } from "@/lib/shop-api";
 
 async function HomeContent() {
@@ -38,6 +39,7 @@ async function HomeContent() {
           <span className="section-caption">Өдөр тутмын хэрэгцээт бараа</span>
         </div>
         <div className="category-grid">
+          {!options.categories.length && <p className="home-empty" role="status">Ангилал одоогоор байхгүй байна.</p>}
           {options.categories.map((category) => (
             <Link className="category-card shop-category-card" key={category.id} href={`/products?category=${category.id}&sort=newest`}>
               <div className="category-photo"><ProductImage product={{ name: category.name, image: category.image }} size="cart" /></div>
@@ -52,7 +54,7 @@ async function HomeContent() {
           <div><p className="eyebrow">Бүтээгдэхүүн</p><h2 id="products-title">Шинээр нэмэгдсэн бүтээгдэхүүн</h2></div>
           <Link className="section-link" href="/products?sort=newest">Бүгдийг харах </Link>
         </div>
-        <div className="product-grid">{arrivals.products.map((product) => <ProductCard key={product.id} product={product} />)}</div>
+        <div className="product-grid">{!arrivals.products.length && <p className="home-empty" role="status">Шинэ бүтээгдэхүүн одоогоор байхгүй байна.</p>}{arrivals.products.map((product) => <ProductCard key={product.id} product={product} />)}</div>
       </section>
     </div>
   );
@@ -60,7 +62,7 @@ async function HomeContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="container shop-home-loading" role="status" aria-label="Бүтээгдэхүүнүүдийг ачаалж байна"><div className="skeleton-card" /><div className="skeleton-search" /></div>}>
+    <Suspense fallback={<HomeSkeleton />}>
       <HomeContent />
     </Suspense>
   );

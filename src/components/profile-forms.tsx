@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useSession } from "@/lib/session-context";
 import type { SessionUser } from "@/lib/auth-validation";
 import { validatePasswordValues, validateProfileValues } from "@/lib/profile-validation";
 import { useAccountForm } from "@/lib/use-account-form";
@@ -11,6 +12,7 @@ function FormFeedback({ message, success }: { message: string; success: string }
 }
 
 export function ProfileForm({ user }: { user: SessionUser }) {
+  const session = useSession();
   const formRef = useRef<HTMLFormElement>(null);
   const form = useAccountForm<{ user: SessionUser }>("/api/shop/profile", formRef);
   const [values, setValues] = useState({ name: user.name, email: user.email });
@@ -21,7 +23,10 @@ export function ProfileForm({ user }: { user: SessionUser }) {
       event.preventDefault(); form.setSuccess("");
       const validation = validateProfileValues(values);
       if (!validation.valid) { form.showValidation(validation.errors); form.focusError(); return; }
+      const finish = session.beginUpdate({ ...user, ...validation.values });
+      if (!finish) return;
       const result = await form.submit(validation.values);
+      finish(result?.user);
       if (result?.user) {
         setValues({ name: result.user.name, email: result.user.email });
         form.setSuccess("Мэдээлэл амжилттай шинэчлэгдлээ."); form.refresh();

@@ -7,7 +7,7 @@ import { useCartProducts } from "@/lib/use-cart-products";
 import { changeCartQuantity, getCartSummary, MAX_CART_QUANTITY, removeCartItem, type CartItem } from "@/lib/cart";
 import { updateStoredCart, useCart } from "@/lib/cart-store";
 import type { CatalogProduct } from "@/lib/catalog";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 
 function BagIcon() {
   return (

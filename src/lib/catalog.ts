@@ -1,12 +1,9 @@
-import type { PartKind } from "./home-products";
-
 export type CatalogProduct = {
   id: string;
   name: string;
   category: string;
   label: string;
   price: number;
-  kind?: PartKind;
   description?: string;
   image?: { url: string; thumbnail?: string; preview?: string };
   categoryId?: string;
@@ -15,25 +12,6 @@ export type CatalogProduct = {
   tags: string[];
   addedAt: string;
 };
-
-export const catalogCategories = [
-  { id: "engine", name: "Хөдөлгүүр" },
-  { id: "brakes", name: "Тоормосны систем" },
-  { id: "suspension", name: "Явах эд анги" },
-  { id: "oil", name: "Тос, тосолгоо" },
-  { id: "filters", name: "Шүүлтүүр" },
-  { id: "wheels", name: "Дугуй, обуд" },
-  { id: "electrical", name: "Цахилгаан" },
-] as const;
-
-export const catalogTags = [
-  { id: "toyota", name: "Toyota" },
-  { id: "nissan", name: "Nissan" },
-  { id: "lexus", name: "Lexus" },
-  { id: "honda", name: "Honda" },
-  { id: "hyundai", name: "Hyundai" },
-  { id: "universal", name: "Универсал" },
-] as const;
 
 export const catalogSorts = [
   { id: "newest", name: "Шинээр нэмэгдсэн" },
@@ -75,10 +53,10 @@ export function parseCatalogQuery(params: SearchParams, options?: { categories: 
 
   return {
     q: first(params.q).trim().slice(0, 120),
-    category: (options ? options.categories.some((item) => item.id === category) : catalogCategories.some((item) => item.id === category) || /^[1-9]\d{0,14}$/.test(category))
+    category: (options ? options.categories.some((item) => item.id === category) : /^[1-9]\d{0,14}$/.test(category))
       ? category
       : "",
-    tag: (options ? options.tags.some((item) => item.id === tag) : catalogTags.some((item) => item.id === tag) || /^[1-9]\d{0,14}$/.test(tag)) ? tag : "",
+    tag: (options ? options.tags.some((item) => item.id === tag) : /^[1-9]\d{0,14}$/.test(tag)) ? tag : "",
     min: price(first(params.min)),
     max: price(first(params.max)),
     sort: catalogSorts.some((item) => item.id === sort)
@@ -106,70 +84,6 @@ export function catalogHref(
   if (next.page > 1) params.set("page", String(next.page));
   return `/products?${params.toString()}`;
 }
-
-export function getCatalogPage(
-  products: CatalogProduct[],
-  query: CatalogQuery,
-) {
-  const category = catalogCategories.find((item) => item.id === query.category);
-  const terms = query.q
-    .toLocaleLowerCase("mn-MN")
-    .normalize("NFKC")
-    .split(/\s+/)
-    .filter(Boolean);
-  const invalidPriceRange =
-    query.min !== undefined && query.max !== undefined && query.min > query.max;
-
-  const filtered = products.filter((product) => {
-    const searchable = [
-      product.name,
-      product.label,
-      product.sku,
-      product.category,
-      ...product.tags.map(
-        (tag) => catalogTags.find((item) => item.id === tag)?.name ?? tag,
-      ),
-    ]
-      .join(" ")
-      .toLocaleLowerCase("mn-MN")
-      .normalize("NFKC");
-    return (
-      !invalidPriceRange &&
-      terms.every((term) => searchable.includes(term)) &&
-      (!category || product.category === category.name) &&
-      (!query.tag || product.tags.includes(query.tag)) &&
-      (query.min === undefined || product.price >= query.min) &&
-      (query.max === undefined || product.price <= query.max)
-    );
-  });
-
-  filtered.sort((a, b) => {
-    const order =
-      query.sort === "price-asc"
-        ? a.price - b.price
-        : query.sort === "price-desc"
-          ? b.price - a.price
-          : query.sort === "name-asc"
-            ? a.name.localeCompare(b.name, "mn-MN")
-            : b.addedAt.localeCompare(a.addedAt);
-    return order || a.id.localeCompare(b.id);
-  });
-
-  const total = filtered.length;
-  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const page = Math.min(query.page, pages);
-  const start = (page - 1) * PAGE_SIZE;
-  return {
-    products: filtered.slice(start, start + PAGE_SIZE),
-    total,
-    pages,
-    page,
-    start: total ? start + 1 : 0,
-    end: Math.min(start + PAGE_SIZE, total),
-    invalidPriceRange,
-  };
-}
-
 
 export function paginationPages(page: number, pages: number): (number | "ellipsis")[] {
   const visible = [...new Set([1, pages, page - 1, page, page + 1].filter((value) => value >= 1 && value <= pages))].sort((a, b) => a - b);

@@ -31,7 +31,7 @@
 }
 .detail-gallery {
   border: 1px solid var(--line);
-  background: white;
+  background: var(--surface);
   border-radius: 19px;
   padding: 16px;
 }
@@ -112,7 +112,7 @@
   font-size: 10px;
   color: #5c6d7e;
   border: 1px solid #dce2e8;
-  background: white;
+  background: var(--surface);
   border-radius: 6px;
   padding: 5px 9px;
 }
@@ -125,7 +125,7 @@
   letter-spacing: -0.8px;
   font-weight: 750;
   line-height: 1.35;
-  color: var(--navy);
+  color: var(--brand-ink);
   margin-block: 25px 23px;
 }
 .product-purchase {
@@ -151,7 +151,7 @@
   display: flex;
   align-items: center;
   height: 49px;
-  background: white;
+  background: var(--surface);
   border: 1px solid #dce2e8;
   border-radius: 9px;
   overflow: hidden;
@@ -159,7 +159,7 @@
 .quantity-control button {
   width: 38px;
   height: 100%;
-  background: white;
+  background: var(--surface);
   color: var(--ink);
   font-size: 20px;
   font-weight: 500;
@@ -176,7 +176,7 @@
   width: 44px;
   min-width: 0;
   border: 0;
-  background: white;
+  background: var(--surface);
   color: var(--ink);
   padding: 0;
   text-align: center;
@@ -231,7 +231,7 @@
   overflow-wrap: anywhere;
 }
 .detail-description {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 26px 30px;
@@ -259,7 +259,7 @@
   max-height: calc(100dvh - 48px);
   border-radius: 17px;
   color: var(--ink);
-  background: white;
+  background: var(--surface);
   overflow: auto;
 }
 .product-image-dialog::backdrop {

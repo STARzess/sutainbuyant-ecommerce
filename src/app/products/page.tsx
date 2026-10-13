@@ -14,7 +14,7 @@ import {
   type CatalogQuery,
   type SearchParams,
 } from "@/lib/catalog";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Бүтээгдэхүүн | Сутайн Буянт",

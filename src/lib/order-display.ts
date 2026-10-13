@@ -1,6 +1,6 @@
 import "server-only";
 import { formatOrderDate, type OrderSummary } from "./orders-api-client";
-import { formatPrice } from "./home-products";
+import { formatPrice } from "./format";
 
 export type OrderListItem = OrderSummary & { dateLabel: string; totalLabel: string };
 

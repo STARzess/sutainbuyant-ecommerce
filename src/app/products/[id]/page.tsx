@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ProductDetailSkeleton } from "@/components/product-detail-skeleton";
 import { AddToCart } from "@/components/add-to-cart";
 import { ProductCard } from "@/components/product-card";
 import { ProductGallery } from "@/components/product-gallery";
 import { ProductImage } from "@/components/product-image";
 import type { CatalogProduct, SearchParams } from "@/lib/catalog";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 import { getCatalogReturnHref, getProductDescription } from "@/lib/product-details";
 import { getShopProduct } from "@/lib/shop-api";
 import "./product-detail.css";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${product.name}${product.label ? ` — ${product.label}` : ""} | Сутайн Буянт`;
   const description = `${product.name}. ${product.label}. Код: ${product.sku}. Үнэ: ${formatPrice(product.price)}. ${getProductDescription(product)}`;
   return {
-    title, description,
+    title, description, alternates: { canonical: `/products/${product.id}` },
     openGraph: { title, description, type: "website", locale: "mn_MN", siteName: "Сутайн Буянт", images: product.image ? [product.image.url] : undefined },
     twitter: { card: "summary_large_image", title, description, images: product.image ? [product.image.url] : undefined },
   };
@@ -89,5 +90,5 @@ async function ProductContent({ params, searchParams }: Props) {
 }
 
 export default function ProductPage(props: Props) {
-  return <Suspense fallback={<div className="container shop-home-loading" role="status" aria-label="Бүтээгдэхүүнийг ачаалж байна"><div className="skeleton-card" /></div>}><ProductContent {...props} /></Suspense>;
+  return <Suspense fallback={<ProductDetailSkeleton />}><ProductContent {...props} /></Suspense>;
 }

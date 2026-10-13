@@ -3,7 +3,7 @@ import type { FieldErrors } from "@/lib/api-client";
 import type { CartItem } from "@/lib/cart";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getCartSummary } from "@/lib/cart";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 import { ProductImage } from "./product-image";
 
 export function CheckoutSummary({ items, products, errors = {} }: {

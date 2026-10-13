@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Ашигласан технологи: Next.js 16.4 App Router, React 19.3, TypeScript, Tailwind CSS 4 болон React Context, Server Components, Route Handlers, Vitest, Playwright, axe, Lighthouse. Токеныг сервер талд httpOnly cookie-д хадгалдаг.
 
-## Getting Started
+## Заавар (windows)
+1. Node.js суулгана https://nodejs.org/en/download Node.js 24.x LTS. npm хамт суух тул terminal дээр дараах командаар суусан үгүйг нь шалгана: node --version, npm --version
+2. PowerShell эсвэл vscode terminal нээгээд төслийн хавтас руу орно: Жишээ нь: cd C:\sutainbuyant-ecommercee
+npm ci
+npm ci нь package-lock.json-д заасан хувилбаруудаар сангуудыг суулгана.
+3. API болон сайтын хаяг тохируулах(Хэрэв файл нь байхгүй бол)
 
-First, run the development server:
+.env.local 
+NEXT_PUBLIC_API_URL=https://job.sutainbuyant.com/api/v1
+NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3100
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+NEXT_PUBLIC_API_URL нь өгөгдөл авах серверийн хаяг. NEXT_PUBLIC_SITE_URL нь сайтын үндсэн хаяг бөгөөд SEO холбоос, sitemap үүсгэхэд ашиглагдаж байгаа.
+4. Хөгжүүлэлтийн горимоор ажиллуулах
+terminal дээр npm run dev
+Production хувилбар ажиллуулах
+npm run build
+npm start
+5. Tests:
+npm run lint
+npm run typecheck
+npm test
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+E2E тестийн браузерыг эхний удаа суулгаад тест ажиллуулна:
+npx playwright install chromium
+npm run test:e2e
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Lighthouse шалгахдаа production серверээ ажиллуулсан хэвээр үлдээж, өөр terminal дээр:
+npm run audit
+Тайлангууд lighthouse-report файлд үүснэ.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Эдгээр шалгалтууд нь 
+npm run lint — React-ийн хэрэглээний алдаа эсвэл дүрмийг шалгана.
+npm run typecheck — TypeScript-ийн type, parameter зөв эсэхийг шалгана.
+npm test — сагсны тооцоо, validation, API хүсэлт, нэвтрэлтийг шалгана.
+npx playwright install chromium болон npm run test:E2E browser суулгаж дээр нь хайх, сагслах, нэвтрэх, захиалах зэрэг хэрэглэгчийн үйлдлийг автоматаар шалгана. Mock API ашиглана.
+npm run audit — хуудасны хурд, SEO, хүртээмжийг хэмжээд тайлан гаргана (C:/sutainbuyant-ecommercee/lighthouse-report) фолдерт үүснэ.

@@ -4,11 +4,17 @@ import Link from "next/link";
 import { SiteNavigation, NavigationLinks } from "@/components/site-navigation";
 import { Suspense } from "react";
 import { CartLink, HeaderCartLink } from "@/components/cart-link";
-import { AccountLink, AccountLinkFallback } from "@/components/account-link";
+import { AppProviders } from "@/components/app-providers";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { themeBootstrap } from "@/lib/theme";
+import { siteUrl } from "@/lib/site-url";
+import { AccountLink } from "@/components/account-link";
 import "./globals.css";
 import "./forms.css";
+import "./theme.css";
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl(),
   title: "Сутайн Буянт | Онлайн дэлгүүр",
   description:
     "Сутайн Буянт онлайн дэлгүүр. Өдөр тутмын хэрэгцээт бараа, бүтээгдэхүүнийг ангилал, үнээр сонгоорой.",
@@ -17,7 +23,7 @@ export const metadata: Metadata = {
     locale: "mn_MN",
     siteName: "Сутайн Буянт",
   },
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -26,8 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="mn">
-      <body>
+    <html lang="mn" data-theme="light" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
+      <body><AppProviders>
         <a className="skip-link" href="#main">
           Үндсэн агуулга руу очих
         </a>
@@ -50,10 +57,9 @@ export default function RootLayout({
               <SiteNavigation />
             </Suspense>
             <div className="header-actions">
+              <ThemeToggle />
               <Suspense fallback={<CartLink />}><HeaderCartLink /></Suspense>
-              <Suspense fallback={<AccountLinkFallback />}>
-                <AccountLink />
-              </Suspense>
+              <AccountLink />
             </div>
           </div>
         </header>
@@ -77,7 +83,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
-      </body>
+      </AppProviders></body>
     </html>
   );
 }

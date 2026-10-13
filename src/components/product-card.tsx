@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ProductImage } from "./product-image";
-import { formatPrice } from "@/lib/home-products";
+import { formatPrice } from "@/lib/format";
 import type { CatalogProduct } from "@/lib/catalog";
 
 export function ProductCard({ product, returnTo }: { product: CatalogProduct; returnTo?: string }) {
