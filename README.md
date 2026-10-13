@@ -5,13 +5,7 @@
 2. PowerShell эсвэл vscode terminal нээгээд төслийн хавтас руу орно: Жишээ нь: cd C:\sutainbuyant-ecommercee
 npm ci
 npm ci нь package-lock.json-д заасан хувилбаруудаар сангуудыг суулгана.
-3. API болон сайтын хаяг тохируулах(Хэрэв файл нь байхгүй бол)
-
-.env.local 
-NEXT_PUBLIC_API_URL=https://job.sutainbuyant.com/api/v1
-NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3100
-
-NEXT_PUBLIC_API_URL нь өгөгдөл авах серверийн хаяг. NEXT_PUBLIC_SITE_URL нь сайтын үндсэн хаяг бөгөөд SEO холбоос, sitemap үүсгэхэд ашиглагдаж байгаа.
+3. API болон сайтын хаяг тохируулах(Хэрэв файл нь байхгүй бол .env.example доторхыг .env.local үүсгэж copy & paste эсвэл .env.example rename хийж .env.local болгоно)
 4. Хөгжүүлэлтийн горимоор ажиллуулах
 terminal дээр npm run dev
 Production хувилбар ажиллуулах
